@@ -80,6 +80,7 @@
       <excludeFolder url="file:///v/filer4b/v38q001/skz94/AndroidStudioProjects/BevoMaps/app/build/intermediates/rs" />
       <excludeFolder url="file:///v/filer4b/v38q001/skz94/AndroidStudioProjects/BevoMaps/app/build/intermediates/symbols" />
       <excludeFolder url="file:///v/filer4b/v38q001/skz94/AndroidStudioProjects/BevoMaps/app/build/outputs" />
+      <excludeFolder url="file:///v/filer4b/v38q001/skz94/AndroidStudioProjects/BevoMaps/app/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
