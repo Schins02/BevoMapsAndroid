@@ -13,14 +13,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-/*** Think about adding callback functionality somehow to let the cache know the urls are available ***/
-
 public class BuildingData {
 
     private static final String TAG = "*** BuildingData ***";
 
     /**
      * Method to get HashMap of HashMaps containing data for each building
+     *
      * @return This will return null if it is not able to get the data from Parse
      */
     public static HashMap<String, HashMap<String, String>> getBuildingMap() {
@@ -42,6 +41,7 @@ public class BuildingData {
 
     /**
      * Helper method to parse the JSON and insert into HashMaps
+     *
      * @param buildingJSON subclass of ParseObject, stores building data in JSON format
      * @return This will return the HashMap of HashMaps or null if there is a problem
      */
@@ -68,15 +68,18 @@ public class BuildingData {
             }
         }
 
-        if (imageMaps.size() > 0){
+        if (imageMaps.size() > 0) {
             Log.d(TAG, "loaded imageMap => " + imageMaps.toString());
             return imageMaps;
-        }
-        else
+        } else
             return null;
     }
 
-    public static ArrayList<String> getMarkerList(){
+    public static ArrayList<String> getMarkerList() {
+        return null;
+    }
+
+    public static HashMap<String, String> getSearchMap() {
         return null;
     }
 
