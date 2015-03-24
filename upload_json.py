@@ -25,12 +25,11 @@ for root, dirs, files, in os.walk(os.getcwd()) :
 			for line in iter(file) :
 
 				floor_and_url = line.split("_")
-				print type(floor_and_url[0])
 				url_data["Buildings"][building_name][floor_and_url[0]] = floor_and_url[1][0:-1]
 				number_of_floors += 1
 
-
-			url_data["Buildings"][building_name]["floors"] = str(number_of_floors)
+			#number of floors - 1 because one line for default_floor
+			url_data["Buildings"][building_name]["floors"] = str(number_of_floors - 1)
 
 print url_data
 connection.request('POST', '/1/classes/BuildingJSON', json.dumps(url_data), {

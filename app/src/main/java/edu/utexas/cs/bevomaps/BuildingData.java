@@ -9,6 +9,7 @@ import com.parse.ParseQuery;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -17,55 +18,66 @@ import java.util.Iterator;
 public class BuildingData {
 
     private static final String TAG = "*** BuildingData ***";
-    private JSONObject mBuildingJSON;
-    private boolean mImageMapsPopulated;
-    private HashMap<String, HashMap<String, String>> mImageMaps;
 
-    public BuildingData() {
+    /**
+     * Method to get HashMap of HashMaps containing data for each building
+     * @return This will return null if it is not able to get the data from Parse
+     */
+    public static HashMap<String, HashMap<String, String>> getBuildingMap() {
 
         ParseQuery<BuildingJSON> query = ParseQuery.getQuery("BuildingJSON");
         query = query.whereEqualTo("pk", "jsonObj");
 
-        query.getFirstInBackground(new GetCallback<BuildingJSON>() {
-            @Override
-            public void done(BuildingJSON buildingJSON, ParseException parseException) {
-                mImageMaps = new HashMap<>();
+        try {
+            BuildingJSON parseBuildingJSON = query.getFirst();
+            if (parseBuildingJSON != null)
+                return extractImageMap(parseBuildingJSON);
 
-                if (parseException == null) {
-                    mBuildingJSON = buildingJSON.getJSONObject("Buildings");
-                    Iterator<String> iter = mBuildingJSON.keys();
-                    while (iter.hasNext()) {
-                        String building = iter.next();
-                        JSONObject buildingInfo;
-                        try {
-                            buildingInfo = mBuildingJSON.getJSONObject(building);
-                            HashMap<String, String> buildingInfoMap = new HashMap<>();
-                            Iterator<String> innerIter = buildingInfo.keys();
-                            while (innerIter.hasNext()) {
-                                String key = innerIter.next();
-                                buildingInfoMap.put(key, buildingInfo.getString(key));
-                            }
-                            mImageMaps.put(building, buildingInfoMap);
+        } catch (ParseException e) {
+            Log.d(TAG, "ParseException => " + e);
+        }
 
-                        } catch (JSONException jsonException) {
-                            Log.d(TAG, "JSON exception => " + jsonException.toString());
-                        }
-                    }
-                    Log.d(TAG, "loaded imageMap => " + mImageMaps.toString());
-                    mImageMapsPopulated = true;
-                } else {
-                    Log.d(TAG, "ParseException => " + parseException);
+        return null;
+    }
+
+    /**
+     * Helper method to parse the JSON and insert into HashMaps
+     * @param buildingJSON subclass of ParseObject, stores building data in JSON format
+     * @return This will return the HashMap of HashMaps or null if there is a problem
+     */
+    private static HashMap<String, HashMap<String, String>> extractImageMap(BuildingJSON buildingJSON) {
+
+        HashMap<String, HashMap<String, String>> imageMaps = new HashMap<>();
+        JSONObject json = buildingJSON.getJSONObject("Buildings");
+        Iterator<String> iter = json.keys();
+        while (iter.hasNext()) {
+            String building = iter.next();
+            JSONObject buildingInfo;
+            try {
+                buildingInfo = json.getJSONObject(building);
+                HashMap<String, String> buildingInfoMap = new HashMap<>();
+                Iterator<String> innerIter = buildingInfo.keys();
+                while (innerIter.hasNext()) {
+                    String key = innerIter.next();
+                    buildingInfoMap.put(key, buildingInfo.getString(key));
                 }
+                imageMaps.put(building, buildingInfoMap);
+
+            } catch (JSONException jsonException) {
+                Log.d(TAG, "JSON exception => " + jsonException.toString());
             }
-        });
+        }
+
+        if (imageMaps.size() > 0){
+            Log.d(TAG, "loaded imageMap => " + imageMaps.toString());
+            return imageMaps;
+        }
+        else
+            return null;
     }
 
-    public boolean imageMapsPopulated(){
-        return mImageMapsPopulated;
-    }
-
-    public HashMap<String, HashMap<String, String>> getImageMap(){
-        return mImageMaps;
+    public static ArrayList<String> getMarkerList(){
+        return null;
     }
 
 }

@@ -7,6 +7,8 @@ import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseObject;
 
+import java.util.HashMap;
+
 public class Test extends Activity {
 
     @Override
@@ -19,7 +21,7 @@ public class Test extends Activity {
         ParseACL defaultACL = new ParseACL();
         defaultACL.setPublicReadAccess(true);
         ParseACL.setDefaultACL(defaultACL, true);
-        BuildingData bd = new BuildingData();
+        HashMap<String, HashMap<String, String>> buildingMap = BuildingData.getBuildingMap();
         setContentView(R.layout.test);
     }
 }
