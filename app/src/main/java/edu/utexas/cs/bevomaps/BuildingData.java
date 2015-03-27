@@ -2,16 +2,14 @@ package edu.utexas.cs.bevomaps;
 
 import android.util.Log;
 
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class BuildingData {
 
@@ -22,7 +20,7 @@ public class BuildingData {
      *
      * @return This will return null if it is not able to get the data from Parse
      */
-    public static HashMap<String, HashMap<String, String>> getBuildingMap() {
+    public static Map<String, Map<String, String>> getBuildingMap() {
 
         ParseQuery<BuildingJSON> query = ParseQuery.getQuery("BuildingJSON");
         query = query.whereEqualTo("pk", "jsonObj");
@@ -45,9 +43,9 @@ public class BuildingData {
      * @param buildingJSON subclass of ParseObject, stores building data in JSON format
      * @return This will return the HashMap of HashMaps or null if there is a problem
      */
-    private static HashMap<String, HashMap<String, String>> extractImageMap(BuildingJSON buildingJSON) {
+    private static Map<String, Map<String, String>> extractImageMap(BuildingJSON buildingJSON) {
 
-        HashMap<String, HashMap<String, String>> imageMaps = new HashMap<>();
+        Map<String, Map<String, String>> imageMaps = new HashMap<>();
         JSONObject json = buildingJSON.getJSONObject("Buildings");
         Iterator<String> iter = json.keys();
         while (iter.hasNext()) {
@@ -75,12 +73,11 @@ public class BuildingData {
             return null;
     }
 
-    public static ArrayList<String> getMarkerList() {
+    public static List<String> getMarkerList() {
         return null;
     }
 
-    public static HashMap<String, String> getSearchMap() {
+    public static Map<String, String> getSearchMap() {
         return null;
     }
-
 }
