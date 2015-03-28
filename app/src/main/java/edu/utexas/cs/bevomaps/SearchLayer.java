@@ -12,48 +12,40 @@ class SearchLayer {
 
     //Input: a string that the user searched for
     //Output: returns a map of "building" : building, and "floor" : floor
-    public HashMap<String, String> getInputText(String s){
-
-        s = s.toLowerCase();
-        HashMap<String, String> result = new HashMap<String,String>();
-
-        //Regex for ABC 1.234
-        //Character,charcter,character, 0 or more blank space, a digit followed by a period, followed by one or more digits
-        if(s.matches("\\w{3}\\s*\\d\\.\\d+")){
-            String building_name = s.substring(0,2);
-            result.put("building", building_name.toUpperCase());
-
-            int period_index = s.indexOf('.');
-            char floor = s.charAt(period_index-1);
-            String floor_number = Character.toString(floor);
-            result.put("floor", floor_number);
-        }
-
-        //Regex for ABC 1234
-        //No decimal in the string
-        //Starting with 3 chars in a row, 0 or more blank space, then one or more digits
-        else if(s.matches("\\w{3}\\s*\\d+")){
-            String[] strings = s.split("\\s+");
-
-            String building_name = strings[0];
-            result.put("building", building_name.toUpperCase());
-
-            String floor_number = Character.toString(strings[1].charAt(0));
-            result.put("floor", floor_number);
-        }
-
-        //Regex for ABC
-        else if(s.matches("\\w{3}")){
-            String building_name = s.substring(0,2);
-            String floor_number = null; //No floor given in the search
-            result.put("building", building_name);
-            result.put("floor", floor_number);
-        }
-
-        else{
-            return null;
-        }
-
-        return result;
+    public static Map<String, String> getInputText(String s){
+    	Map<String, String> result = new HashMap<String,String>();
+    	
+    	// Find building name in the search string
+    	Pattern pattern = Pattern.compile("([a-zA-Z]{3})");    	
+    	Matcher match = pattern.matcher(s);
+    	String building = null;
+    	String floor = null;
+    	
+    	if(match.find()){
+    		building = match.group(1);    		
+    	}    	
+    	
+    	// Find the floor in the string string
+    	Pattern roomPattern = Pattern.compile("(\\d\\.\\d*)");
+    	match = roomPattern.matcher(s);    	
+    	if(match.find()){
+    		floor = match.group(1);
+    		floor = Character.toString(floor.charAt(0));
+    	}    	
+    	
+    	// Look for a floor number with no decimal
+    	else{
+    		roomPattern = Pattern.compile("(\\d+)");
+    		match = roomPattern.matcher(s);
+    		if(match.find()){
+    			floor = match.group(1);
+    			floor = Character.toString(floor.charAt(0));
+    		}    		
+    	}    	
+    	
+    	result.put("building", building);
+    	result.put("floor", floor);
+    	
+	return result;  	
     }
 }
