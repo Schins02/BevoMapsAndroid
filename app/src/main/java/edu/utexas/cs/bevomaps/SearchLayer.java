@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * Created by Steven on 3/22/2015.
  */
 
-class SearchLayer {
+    public class SearchLayer {
 
     //Input: a string that the user searched for
     //Output: returns a map of "building" : building, angit stad "floor" : floor
