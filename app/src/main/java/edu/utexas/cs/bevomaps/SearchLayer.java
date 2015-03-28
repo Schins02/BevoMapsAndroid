@@ -1,6 +1,7 @@
 package edu.utexas.cs.bevomaps;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,7 +12,7 @@ import java.util.regex.Pattern;
 class SearchLayer {
 
     //Input: a string that the user searched for
-    //Output: returns a map of "building" : building, and "floor" : floor
+    //Output: returns a map of "building" : building, angit stad "floor" : floor
     public static Map<String, String> getInputText(String s){
     	Map<String, String> result = new HashMap<String,String>();
     	
