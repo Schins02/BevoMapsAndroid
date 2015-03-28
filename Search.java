@@ -7,17 +7,17 @@ import java.util.regex.Pattern;
  */
 public class Search {
 
-    //Input: a string that the user searched for
+   //Input: a string that the user searched for
     //Output: returns a map of "building" : building, and "floor" : floor
-    public HashMap<String, String> getInputText(String s){
+    public static Map<String, String> getInputText(String s){
 
         s = s.toLowerCase();
-        HashMap<String, String> result = new HashMap<String,String>();
+        Map<String, String> result = new HashMap<String,String>();
 
         //Regex for ABC 1.234
         //Character,charcter,character, 0 or more blank space, a digit followed by a period, followed by one or more digits
         if(s.matches("\\w{3}\\s*\\d\\.\\d+")){
-            String building_name = s.substring(0,2);
+            String building_name = s.substring(0,3);
             result.put("building", building_name.toUpperCase());
 
             int period_index = s.indexOf('.');
@@ -41,16 +41,25 @@ public class Search {
 
         //Regex for ABC
         else if(s.matches("\\w{3}")){
-            String building_name = s.substring(0,2);
+            String building_name = s.substring(0,3);
             String floor_number = null; //No floor given in the search
-            result.put("building", building_name);
+            result.put("building", building_name.toUpperCase());
             result.put("floor", floor_number);
+        }
+        
+        else if(s.matches("\\w{3}[\\s\\.]*")){
+        		String building_name = s.substring(0,3);
+        		result.put("building", building_name.toUpperCase());
+        		
+        		result.put("floor", null);
         }
 
         else{
-            return null;
+            result.put("building", null);
+            result.put("floor", null);
         }
 
         return result;
     }
+
 }
