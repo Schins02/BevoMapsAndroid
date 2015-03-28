@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
  */
 public class Search {
 
-    //Input: a string that the user searched for
+   //Input: a string that the user searched for
     //Output: returns a map of "building" : building, and "floor" : floor
     public static Map<String, String> getInputText(String s){
 
@@ -46,11 +46,20 @@ public class Search {
             result.put("building", building_name.toUpperCase());
             result.put("floor", floor_number);
         }
+        
+        else if(s.matches("\\w{3}[\\s\\.]*")){
+        		String building_name = s.substring(0,3);
+        		result.put("building", building_name.toUpperCase());
+        		
+        		result.put("floor", null);
+        }
 
         else{
-            return null;
+            result.put("building", null);
+            result.put("floor", null);
         }
 
         return result;
     }
+
 }
