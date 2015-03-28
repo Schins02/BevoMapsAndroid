@@ -3,7 +3,6 @@ package edu.utexas.cs.bevomaps;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -28,8 +27,7 @@ public class Test extends Activity {
     defaultACL.setPublicReadAccess(true);
     ParseACL.setDefaultACL(defaultACL, true);
 
-    Map<String, Map<String, String>> buildingMap = BuildingData.getBuildingMap();
-    Log.d(TAG, buildingMap.toString());
+    Map<String, Map<String, String>> buildingMap = DataLayer.getBuildingMap();
 
     setContentView(R.layout.test);
 

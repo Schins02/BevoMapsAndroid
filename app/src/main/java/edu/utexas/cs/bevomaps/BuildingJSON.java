@@ -6,11 +6,6 @@ import org.json.JSONObject;
 
 @ParseClassName("BuildingJSON")
 public class BuildingJSON extends ParseObject {
-
-    public BuildingJSON() {
-
-    }
-
     public JSONObject getBuildingJSON() {
       return getJSONObject("Buildings");
     }

@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class BuildingData {
+class DataLayer {
 
     private static final String TAG = "*** BuildingData ***";
 
@@ -20,7 +20,7 @@ public class BuildingData {
      *
      * @return This will return null if it is not able to get the data from Parse
      */
-    public static Map<String, Map<String, String>> getBuildingMap() {
+    static Map<String, Map<String, String>> getBuildingMap() {
 
         ParseQuery<BuildingJSON> query = ParseQuery.getQuery("BuildingJSON");
         query = query.whereEqualTo("pk", "jsonObj");
@@ -73,11 +73,11 @@ public class BuildingData {
             return null;
     }
 
-    public static List<String> getMarkerList() {
+    static List<String> getMarkerList() {
         return null;
     }
 
-    public static Map<String, String> getSearchMap() {
+    static Map<String, String> getSearchMap() {
         return null;
     }
 }
