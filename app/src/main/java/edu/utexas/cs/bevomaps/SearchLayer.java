@@ -1,3 +1,5 @@
+package edu.utexas.cs.bevomaps;
+
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -5,19 +7,20 @@ import java.util.regex.Pattern;
 /**
  * Created by Steven on 3/22/2015.
  */
-public class Search {
 
-   //Input: a string that the user searched for
+class SearchLayer {
+
+    //Input: a string that the user searched for
     //Output: returns a map of "building" : building, and "floor" : floor
-    public static Map<String, String> getInputText(String s){
+    public HashMap<String, String> getInputText(String s){
 
         s = s.toLowerCase();
-        Map<String, String> result = new HashMap<String,String>();
+        HashMap<String, String> result = new HashMap<String,String>();
 
         //Regex for ABC 1.234
         //Character,charcter,character, 0 or more blank space, a digit followed by a period, followed by one or more digits
         if(s.matches("\\w{3}\\s*\\d\\.\\d+")){
-            String building_name = s.substring(0,3);
+            String building_name = s.substring(0,2);
             result.put("building", building_name.toUpperCase());
 
             int period_index = s.indexOf('.');
@@ -41,25 +44,16 @@ public class Search {
 
         //Regex for ABC
         else if(s.matches("\\w{3}")){
-            String building_name = s.substring(0,3);
+            String building_name = s.substring(0,2);
             String floor_number = null; //No floor given in the search
-            result.put("building", building_name.toUpperCase());
+            result.put("building", building_name);
             result.put("floor", floor_number);
-        }
-        
-        else if(s.matches("\\w{3}[\\s\\.]*")){
-        		String building_name = s.substring(0,3);
-        		result.put("building", building_name.toUpperCase());
-        		
-        		result.put("floor", null);
         }
 
         else{
-            result.put("building", null);
-            result.put("floor", null);
+            return null;
         }
 
         return result;
     }
-
 }

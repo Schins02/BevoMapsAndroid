@@ -11,6 +11,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Created by John on 3/18/2015.
+ */
+
 class DataLayer {
 
     private static final String TAG = "*** BuildingData ***";
