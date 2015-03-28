@@ -18,22 +18,19 @@ class SearchLayer {
     	// Find building name in the search string
     	Pattern pattern = Pattern.compile("([a-zA-Z]{3})");    	
     	Matcher match = pattern.matcher(s);
-    	String building = "";
-    	if(match.find()){
-    		building = match.group(1);
-    		result.put("building", building);
-    	}    	
+    	String building = null;
+    	String floor = null;
     	
-    	if(building == ""){
-    		result.put("building",  null);
-    	}   
+    	if(match.find()){
+    		building = match.group(1);    		
+    	}    	
     	
     	// Find the floor in the string string
     	Pattern roomPattern = Pattern.compile("(\\d\\.\\d*)");
     	match = roomPattern.matcher(s);    	
     	if(match.find()){
-    		String floor = match.group(1);
-    		result.put("floor", Character.toString(floor.charAt(0)));
+    		floor = match.group(1);
+    		floor = Character.toString(floor.charAt(0));
     	}    	
     	
     	// Look for a floor number with no decimal
@@ -41,11 +38,14 @@ class SearchLayer {
     		roomPattern = Pattern.compile("(\\d+)");
     		match = roomPattern.matcher(s);
     		if(match.find()){
-    			String floor = match.group(1);
-    			result.put("floor", Character.toString(floor.charAt(0)));
+    			floor = match.group(1);
+    			floor = Character.toString(floor.charAt(0));
     		}    		
     	}    	
     	
-		return result;  	
+    	result.put("building", building);
+    	result.put("floor", floor);
+    	
+	return result;  	
     }
 }
