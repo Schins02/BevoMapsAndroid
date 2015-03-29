@@ -15,7 +15,7 @@ import java.util.List;
 
 class DataLayer {
 
-    private static final String TAG = "*** DataLayer ***";
+    private static final String TAG = "DataLayer";
 
     /**
      * Method to get HashMap of HashMaps containing data for each building

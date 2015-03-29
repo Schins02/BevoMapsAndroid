@@ -16,9 +16,16 @@ import com.parse.ParseACL;
 import com.parse.ParseObject;
 import java.util.Map;
 
-public class TestView extends Activity {
+public class TestView extends Activity implements View.OnClickListener{
 
-  private static String TAG = "*** TestView ***";
+  // Fields---------------------------------------------------------
+
+  private static final String TAG = "TestView";
+
+  private CacheLayer cacheLayer;
+  private ImageView imageView;
+
+  // Methods--------------------------------------------------------
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -41,16 +48,15 @@ public class TestView extends Activity {
       window.setAttributes(params);
     }
 
-//    Log.d(TAG, DataLayer.getBuildingMap().toString());
-    final CacheLayer cache = new CacheLayer(this);
+    cacheLayer = new CacheLayer();
+    imageView = (ImageView)findViewById(R.id.image);
 
-    final ImageView view = (ImageView)findViewById(R.id.image);
     final Button button = (Button)findViewById(R.id.button);
-    button.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        cache.loadImage(view, "GDC", "06");
-      }
-    });
+    button.setOnClickListener(this);
+  }
+
+  @Override
+  public void onClick(View v) {
+    cacheLayer.loadImage(this, imageView, "GDC", "06");
   }
 }
