@@ -1,20 +1,16 @@
 package edu.utexas.cs.bevomaps;
 
 import android.app.Activity;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseObject;
-import java.util.Map;
 
 public class TestView extends Activity implements View.OnClickListener{
 

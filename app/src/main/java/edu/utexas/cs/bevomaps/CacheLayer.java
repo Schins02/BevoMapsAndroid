@@ -8,7 +8,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import android.widget.ImageView;
-
 import java.io.File;
 import java.util.HashMap;
 
@@ -31,50 +30,49 @@ class CacheLayer implements Parcelable {
       return new CacheLayer[size];
     }
   };
-
+  private static final BitmapFactory.Options OPTIONS = new BitmapFactory.Options();
   private static final String TAG = "CacheLayer";
   private HashMap<String, HashMap<String, String>> buildingMap;
 
   // Constructors---------------------------------------------------
 
-  CacheLayer () {
+  CacheLayer() {
     new DownloadBuildingsTask().execute();
   }
 
   // Methods--------------------------------------------------------
 
   void loadImage(Context context, ImageView imageView, String building, String floor) {
-    if (buildingMap != null) {
-      if (buildingMap.get(building) == null) {
-        Log.d(TAG, "Bad building.");
-        return;
-      }
+    if (buildingMap == null) {
+      Log.d(TAG, "Building map not loaded.");
+      return;
+    }
 
-      String imageUrl = buildingMap.get(building).get(floor);
-      if (imageUrl == null) {
-        Log.d(TAG, "Bad floor.");
-        return;
-      }
+    if (buildingMap.get(building) == null) {
+      Log.d(TAG, "Bad building.");
+      return;
+    }
 
-      File cacheFile = new File(context.getCacheDir(), getImageName(imageUrl));
-      if (cacheFile.isFile()) {
-        Log.d(TAG, "Loading from cache.");
-        new LoadImageTask(imageView).execute(cacheFile);
-      }
-      else {
-        Log.d(TAG, "Loading from network.");
-        new DownloadImageTask(cacheFile, imageView).execute(imageUrl);
-      }
+    String imageUrl = buildingMap.get(building).get(floor);
+    if (imageUrl == null) {
+      Log.d(TAG, "Bad floor.");
+      return;
+    }
+
+    File cacheFile = new File(context.getCacheDir(), getImageName(imageUrl));
+    if (cacheFile.isFile()) {
+      Log.d(TAG, "Loading from cache.");
+      new LoadImageTask(imageView).execute(cacheFile);
     }
     else {
-      Log.d(TAG, "Building map not loaded.");
+      Log.d(TAG, "Loading from network.");
+      new DownloadImageTask(cacheFile, imageView).execute(imageUrl);
     }
   }
 
   static BitmapFactory.Options getImageOptions() {
-    BitmapFactory.Options options = new BitmapFactory.Options();
-    options.inSampleSize = 4;
-    return options;
+    OPTIONS.inSampleSize = 4;
+    return OPTIONS;
   }
 
   private static String getImageName(String url) {
@@ -89,7 +87,7 @@ class CacheLayer implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel out, int flags) {
-    Bundle bundle = new Bundle(2);
+    Bundle bundle = new Bundle();
     bundle.putSerializable("buildingMap", buildingMap);
     out.writeBundle(bundle);
   }
@@ -106,8 +104,8 @@ class CacheLayer implements Parcelable {
     }
 
     @Override
-    protected void onPostExecute(HashMap<String, HashMap<String, String>>  result) {
-      buildingMap = result;
+    protected void onPostExecute(HashMap<String, HashMap<String, String>> map) {
+      buildingMap = map;
     }
   }
 }
