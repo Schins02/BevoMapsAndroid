@@ -15,13 +15,12 @@ import java.util.regex.Pattern;
     //Output: returns a map of "building" : building, angit stad "floor" : floor
     public static Map<String, String> getInputText(String s){
     	Map<String, String> result = new HashMap<String,String>();
-    	
+        String building = null;
+        String floor = null;
+
     	// Find building name in the search string
     	Pattern pattern = Pattern.compile("([a-zA-Z]{3})");    	
     	Matcher match = pattern.matcher(s);
-    	String building = null;
-    	String floor = null;
-    	
     	if(match.find()){
     		building = match.group(1);    		
     	}    	
