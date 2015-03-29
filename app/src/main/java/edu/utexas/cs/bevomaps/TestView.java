@@ -21,6 +21,8 @@ public class TestView extends Activity implements View.OnClickListener{
   private CacheLayer cacheLayer;
   private ImageView imageView;
 
+  private Button button1, button2;
+
   // Methods--------------------------------------------------------
 
   @Override
@@ -47,12 +49,19 @@ public class TestView extends Activity implements View.OnClickListener{
     cacheLayer = new CacheLayer();
     imageView = (ImageView)findViewById(R.id.image);
 
-    final Button button = (Button)findViewById(R.id.button);
-    button.setOnClickListener(this);
+    button1 = (Button)findViewById(R.id.button1);
+    button2 = (Button)findViewById(R.id.button2);
+    button1.setOnClickListener(this);
+    button2.setOnClickListener(this);
   }
 
   @Override
   public void onClick(View v) {
-    cacheLayer.loadImage(this, imageView, "GDC", "06");
+    if (v == button1) {
+      cacheLayer.loadImage(this, imageView, "GDC", "01");
+    }
+    else if (v == button2) {
+      cacheLayer.loadImage(this, imageView, "GDC", "03");
+    }
   }
 }

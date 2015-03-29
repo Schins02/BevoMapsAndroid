@@ -30,36 +30,49 @@ class CacheLayer implements Parcelable {
       return new CacheLayer[size];
     }
   };
+
+  static final long CACHE_SIZE = 1048576; // 1MB
+
   private static final BitmapFactory.Options OPTIONS = new BitmapFactory.Options();
-  private static final String TAG = "CacheLayer";
+  private static final String TAG = "CacheLayer",
+                              CACHE_DIR = "ImageCache",
+                              DEFAULT_FLOOR = "defaultFloor";
+
   private HashMap<String, HashMap<String, String>> buildingMap;
 
   // Constructors---------------------------------------------------
 
   CacheLayer() {
-    new DownloadBuildingsTask().execute();
+    new DownloadBuildingMapTask().execute();
   }
 
   // Methods--------------------------------------------------------
 
-  void loadImage(Context context, ImageView imageView, String building, String floor) {
+  boolean checkBulding (String building) {
     if (buildingMap == null) {
       Log.d(TAG, "Building map not loaded.");
-      return;
+      return false;
     }
 
-    if (buildingMap.get(building) == null) {
-      Log.d(TAG, "Bad building.");
+    return buildingMap.containsKey(building);
+  }
+
+  void loadImage(Context context, ImageView imageView, String building, String floor) {
+    if (!checkBulding(building)) {
       return;
     }
 
     String imageUrl = buildingMap.get(building).get(floor);
     if (imageUrl == null) {
-      Log.d(TAG, "Bad floor.");
-      return;
+      imageUrl = buildingMap.get(building).get(DEFAULT_FLOOR);
     }
 
-    File cacheFile = new File(context.getCacheDir(), getImageName(imageUrl));
+    File cacheDir = new File (context.getCacheDir(), CACHE_DIR);
+    if (cacheDir.mkdir()) {
+      Log.d(TAG, "Creating image cache.");
+    }
+
+    File cacheFile = new File(cacheDir, getImageName(imageUrl));
     if (cacheFile.isFile()) {
       Log.d(TAG, "Loading from cache.");
       new LoadImageTask(imageView).execute(cacheFile);
@@ -97,7 +110,7 @@ class CacheLayer implements Parcelable {
     return 0;
   }
 
-  private class DownloadBuildingsTask extends AsyncTask<Void, Void, HashMap<String, HashMap<String, String>>> {
+  private class DownloadBuildingMapTask extends AsyncTask<Void, Void, HashMap<String, HashMap<String, String>>> {
     @Override
     protected HashMap<String, HashMap<String, String>> doInBackground(Void... params) {
       return DataLayer.getBuildingMap();

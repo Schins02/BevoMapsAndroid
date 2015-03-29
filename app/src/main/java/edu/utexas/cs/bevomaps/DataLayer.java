@@ -33,7 +33,7 @@ class DataLayer {
                 return extractImageMap(parseBuildingJSON);
 
         } catch (ParseException e) {
-            Log.e(TAG, "Parse Exception => " + e);
+            Log.e(TAG, e.toString());
         }
 
         return null;
@@ -64,7 +64,7 @@ class DataLayer {
                 imageMaps.put(building, buildingInfoMap);
 
             } catch (JSONException jsonException) {
-                Log.e(TAG, "JSON Exception => " + jsonException.toString());
+                Log.e(TAG, jsonException.toString());
             }
         }
 

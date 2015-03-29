@@ -33,7 +33,7 @@ class LoadImageTask extends AsyncTask<File, Void, Bitmap> {
 
   @Override
   protected void onPostExecute(Bitmap image) {
-    if (image != null) {
+    if (imageView != null && image != null) {
       imageView.setImageBitmap(image);
     }
   }
