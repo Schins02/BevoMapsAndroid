@@ -12,22 +12,37 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_tower"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
         <activity
-            android:name=".TestView"
+            android:name=".MapActivity"
+            android:icon="@drawable/ic_tower"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
-          android:name=".BuildingView"
-          android:label="@string/title_activity_building_view" >
+            android:name=".BuildingActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".MapActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="MapActivity" />
+        </activity>
+
+        <activity
+            android:name=".TestActivity"
+            android:label="@string/title_test" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <meta-data
