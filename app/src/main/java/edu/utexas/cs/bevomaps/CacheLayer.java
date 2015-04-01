@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.google.android.gms.maps.GoogleMap;
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * CacheLayer.java
@@ -55,6 +56,10 @@ class CacheLayer implements Parcelable {
   }
 
   // Methods--------------------------------------------------------
+
+  Map<String, String> getSearchMap() {
+    return null;
+  }
 
   boolean isBuilding(String building) {
     if (buildingMap == null) {

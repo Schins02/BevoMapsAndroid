@@ -1,4 +1,6 @@
 <resources>
   <string name="app_name">Bevo Maps</string>
-  <string name="title_test">Test</string>
+  <string name="button_menu">Menu</string>
+  <string name="button_speech">Speech</string>
+  <string name="search_hint">Search</string>
 </resources>

@@ -16,35 +16,42 @@
       android:layout_height="match_parent"
       android:name="com.google.android.gms.maps.MapFragment" />
 
-
-    <LinearLayout
+    <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_margin="16dp"
       android:orientation="horizontal"
-      android:background="@color/material_white"
-      android:layout_margin="16dp" >
+      android:background="@color/material_white" >
 
       <ImageButton
         android:id="@+id/menu"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:contentDescription="" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/button_menu" />
 
       <EditText
         android:id="@+id/text"
         android:layout_height="48dp"
         android:layout_width="match_parent"
+        android:layout_toLeftOf="@id/speech"
+        android:layout_toStartOf="@id/speech"
+        android:layout_toRightOf="@id/menu"
+        android:layout_toEndOf="@id/menu"
         android:background="@color/material_white"
-        android:editable="true"
-        android:hint="Search"
-        android:inputType="textAutoComplete" />
+        android:hint="@string/search_hint"
+        android:inputType="textAutoComplete"
+        />
 
       <ImageButton
-        android:id="@+id/search"
+        android:id="@+id/speech"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:contentDescription="" />
-    </LinearLayout>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/button_speech" />
+    </RelativeLayout>
 
     <com.getbase.floatingactionbutton.FloatingActionButton
       android:id="@+id/location"
