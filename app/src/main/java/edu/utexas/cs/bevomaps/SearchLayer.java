@@ -15,7 +15,18 @@ class SearchLayer {
 
     //Input: a string that the user searched for
     //Output: returns a map of "building" : building, and "floor" : floor
-    public static Map<String, String> getInputText(String s){
+    public static Map<String, String> parseInputText(String s, CacheLayer c){
+    	s = s.toLowerCase();
+        String[] strings = s.split("\\s+");        
+                
+        //Map of common searches to the building or floor
+        Map<String,String> cache_map = c.getSearchMap();
+        for(String t: strings){
+            if(cache_map.containsKey(t.toLowerCase())){
+                s = s.replaceAll(t, cache_map.get(t).toLowerCase());
+            }
+        }
+        
     	Map<String, String> result = new HashMap<String,String>();
     	
     	// Find building name in the search string
@@ -25,7 +36,7 @@ class SearchLayer {
     	String floor = null;
     	
     	if(match.find()){
-    		building = match.group(1);    		
+    		building = match.group(1).toUpperCase();    		
     	}    	
     	
     	// Find the floor in the string string
@@ -49,6 +60,7 @@ class SearchLayer {
     	result.put("building", building);
     	result.put("floor", floor);
     	
-	return result;  	
+	return result;
+        
     }
 }
