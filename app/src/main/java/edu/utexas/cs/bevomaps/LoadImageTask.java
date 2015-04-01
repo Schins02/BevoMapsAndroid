@@ -10,24 +10,27 @@ import java.io.File;
  * Created by Eric on 3/28/15.
  */
 
-class LoadImageTask extends AsyncTask<File, Void, Bitmap> {
+class LoadImageTask extends AsyncTask<Void, Void, Bitmap> {
 
   // Fields---------------------------------------------------------
 
   private static final String TAG = "LoadImageTask";
+
+  private final File cacheFile;
   private final ImageView imageView;
 
   // Constructors---------------------------------------------------
 
-  LoadImageTask(ImageView imageView) {
+  LoadImageTask(File cacheFile, ImageView imageView) {
+    this.cacheFile = cacheFile;
     this.imageView = imageView;
   }
 
   // Methods--------------------------------------------------------
 
   @Override
-  protected Bitmap doInBackground(File... params) {
-    return BitmapFactory.decodeFile(params[0].getPath(),
+  protected Bitmap doInBackground(Void... params) {
+    return BitmapFactory.decodeFile(cacheFile.getPath(),
         CacheLayer.getImageOptions());
   }
 

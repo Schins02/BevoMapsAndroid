@@ -12,53 +12,52 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 
 /**
  * Created by Eric on 3/29/15.
  */
 
-class DownloadImageTask extends AsyncTask <String, Void, Bitmap> {
+class DownloadImageTask extends AsyncTask <Void, Void, Bitmap> {
 
   // Fields---------------------------------------------------------
 
   private static final String TAG = "DownloadImageTask";
-  private final File cacheFile;
+
+  private final File cacheDir;
   private final ImageView imageView;
+  private final Map<String, String> infoMap;
+  private final String imageUrl;
 
   // Constructors---------------------------------------------------
 
-  DownloadImageTask(File cacheFile, ImageView imageView) {
-    this.cacheFile = cacheFile;
+  DownloadImageTask(File cacheDir, ImageView imageView,
+                    Map<String, String> infoMap, String imageUrl) {
+    this.cacheDir = cacheDir;
     this.imageView = imageView;
+    this.infoMap = infoMap;
+    this.imageUrl = imageUrl;
   }
+
+  // Methods--------------------------------------------------------
 
   @Override
   protected void onPreExecute() {
-    File cacheDir = cacheFile.getParentFile();
-    if (cacheDir == null) {
-      return;
-    }
-
-    long cacheLength = getDirSpace(cacheDir);
-    while (cacheLength > CacheLayer.CACHE_SIZE) {
-      cacheLength -= freeDirSpace(cacheDir);
-    }
+    freeCache();
   }
 
   @Override
-  protected Bitmap doInBackground(String... params) {
+  protected Bitmap doInBackground(Void... params) {
     HttpURLConnection connection = null;
 
     try {
-      FileOutputStream out = new FileOutputStream(cacheFile);
-      connection = (HttpURLConnection)new URL(params[0]).openConnection();
+      File file = new File(cacheDir, CacheLayer.getImageName(imageUrl));
+      FileOutputStream out = new FileOutputStream(file);
+      connection = (HttpURLConnection)new URL(imageUrl).openConnection();
       InputStream in = connection.getInputStream();
 
       copyStream(in, out);
-      in.close();
-      out.close();
-
-      return BitmapFactory.decodeFile(cacheFile.getPath(),
+      return BitmapFactory.decodeFile(file.getPath(),
           CacheLayer.getImageOptions());
     }
     catch (Exception e) {
@@ -75,35 +74,29 @@ class DownloadImageTask extends AsyncTask <String, Void, Bitmap> {
 
   @Override
   protected void onPostExecute(Bitmap image) {
-    if (image != null) {
+    if (imageView != null && image != null) {
       imageView.setImageBitmap(image);
-    }
-  }
 
-  private static void copyStream (InputStream in, OutputStream out)
-      throws IOException {
-    byte[] buffer = new byte[102400];
-    int length;
-    while ((length = in.read(buffer)) > 0) {
-      out.write(buffer, 0, length);
-    }
-  }
+      for (String key : infoMap.keySet()) {
+        String url = infoMap.get(key);
 
-  private static long getDirSpace(File dir) {
-    long length = 0;
-    if (dir != null && dir.isDirectory()) {
-      for (File file : dir.listFiles()) {
-        length += file.length();
+        if (!key.equals(CacheLayer.DEFAULT_FLOOR) &&
+            !key.equals(CacheLayer.NUM_FLOORS) &&
+            !url.equals(imageUrl)) {
+          new CacheImageTask().execute(url);
+        }
       }
     }
-
-    return length;
   }
 
-  private static long freeDirSpace(File dir) {
+  private void freeCache() {
+    File[] files = cacheDir.listFiles();
     long length = 0;
-    if (dir != null && dir.isDirectory()) {
-      File[] files = dir.listFiles();
+    for (File file : files) {
+      length += file.length();
+    }
+
+    while (length > CacheLayer.CACHE_SIZE) {
       int oldest = 0;
       for (int i = 1; i < files.length; i++) {
         if (files[i].lastModified() < files[oldest].lastModified()) {
@@ -111,12 +104,49 @@ class DownloadImageTask extends AsyncTask <String, Void, Bitmap> {
         }
       }
 
-      length = files[oldest].length();
-      if (!files[oldest].delete()) {
-        length = 0;
+      long deleted = files[oldest].length();
+      if (files[oldest].delete()) {
+        length -= deleted;
       }
     }
+  }
 
-    return length;
+  private static void copyStream(InputStream in, OutputStream out)
+      throws IOException {
+    byte[] buffer = new byte[102400];
+    int length;
+    while ((length = in.read(buffer)) > 0) {
+      out.write(buffer, 0, length);
+    }
+
+    in.close();
+    out.close();
+  }
+
+  private class CacheImageTask extends AsyncTask<String, Void, Void> {
+
+    @Override
+    protected Void doInBackground(String... params) {
+      HttpURLConnection connection = null;
+
+      try {
+        FileOutputStream out = new FileOutputStream(new File(cacheDir,
+            CacheLayer.getImageName(params[0])));
+        connection = (HttpURLConnection)new URL(params[0]).openConnection();
+        InputStream in = connection.getInputStream();
+
+        copyStream(in, out);
+      }
+      catch (Exception e) {
+        Log.e(TAG, e.toString());
+      }
+      finally {
+        if (connection != null) {
+          connection.disconnect();
+        }
+      }
+
+      return null;
+    }
   }
 }
