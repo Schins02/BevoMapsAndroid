@@ -25,23 +25,27 @@ import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseObject;
 
-public class MapActivity extends Activity implements OnMapReadyCallback, View.OnClickListener,
+/**
+ * MapActivity.java
+ *
+ * Created by Eric on 3/28/15.
+ */
+
+public class MapActivity extends Activity implements OnMapReadyCallback,
     GoogleApiClient.ConnectionCallbacks, LocationListener{
 
   // Fields---------------------------------------------------------
 
-  private static final boolean EMULATOR = false; //TODO Remove
+  private static final boolean EMULATOR = false; //TODO Change immediately
   private static final String TAG = "MapActivity";
 
   private CacheLayer cacheLayer;
-  private FloatingActionButton fabView;
   private GoogleMap mapView;
 
-  private static final long LOC_INTERVAL = 5000; //5s
+  private static final long LOC_INTERVAL = 6000; //6s
   private static final LatLng LOC_TOWER = new LatLng(30.2861, -97.739321);
   private static final LocationRequest LOC_REQUEST = new LocationRequest();
 
-  private boolean locationFollow;
   private GoogleApiClient locationClient;
   private Marker locationMarker;
 
@@ -56,8 +60,13 @@ public class MapActivity extends Activity implements OnMapReadyCallback, View.On
         (MapFragment)getFragmentManager().findFragmentById(R.id.map);
     fragment.getMapAsync(this);
 
-    fabView = (FloatingActionButton)findViewById(R.id.location);
-    fabView.setOnClickListener(this);
+    FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.location);
+    fab.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        mapView.animateCamera(CameraUpdateFactory.newLatLng(locationMarker.getPosition()));
+      }
+    });
 
     getLocationConfig();
     getParseConfig();
@@ -69,6 +78,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback, View.On
   private void getLocationConfig() {
     LOC_REQUEST.setInterval(LOC_INTERVAL);
     LOC_REQUEST.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
     locationClient = new GoogleApiClient.Builder(this)
         .addConnectionCallbacks(this)
         .addApi(LocationServices.API)
@@ -121,23 +131,9 @@ public class MapActivity extends Activity implements OnMapReadyCallback, View.On
 
     locationMarker = mapView.addMarker(new MarkerOptions()
         .position(LOC_TOWER)
-        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker)));
+        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker))
+        .anchor(0.5f, 1.0f));
     cacheLayer.loadMarkers(mapView);
-  }
-
-  @Override
-  public void onClick(View v) {
-    if (v == fabView) {
-      locationFollow = !locationFollow;
-
-      if (locationFollow) {
-        fabView.setIcon(R.drawable.ic_crosshair);
-        mapView.animateCamera(CameraUpdateFactory.newLatLng(locationMarker.getPosition()));
-      }
-      else {
-        fabView.setIcon(R.drawable.ic_crosshair_disabled);
-      }
-    }
   }
 
   @Override
@@ -154,10 +150,6 @@ public class MapActivity extends Activity implements OnMapReadyCallback, View.On
   public void onLocationChanged(Location location) {
     LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude());
     locationMarker.setPosition(coordinate);
-
-    if (locationFollow) {
-      mapView.animateCamera(CameraUpdateFactory.newLatLng(coordinate));
-    }
   }
 
   @Override

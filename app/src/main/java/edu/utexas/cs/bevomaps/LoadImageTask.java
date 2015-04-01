@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import java.io.File;
 
 /**
+ * LoadImageTask.java
+ *
  * Created by Eric on 3/28/15.
  */
 

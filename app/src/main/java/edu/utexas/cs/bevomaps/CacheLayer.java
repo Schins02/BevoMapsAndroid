@@ -13,6 +13,8 @@ import java.io.File;
 import java.util.HashMap;
 
 /**
+ * CacheLayer.java
+ *
  * Created by Eric on 3/28/15.
  */
 
@@ -28,6 +30,7 @@ class CacheLayer implements Parcelable {
   private HashMap<String, HashMap<String, String>> buildingMap;
   static final String DEFAULT_FLOOR = "defaultFloor", NUM_FLOORS = "numFloors";
 
+  private static final BitmapFactory.Options OPTIONS = new BitmapFactory.Options();
   public static final Creator<CacheLayer> CREATOR = new Creator<CacheLayer>() {
     @Override
     public CacheLayer createFromParcel(Parcel in) {
@@ -39,7 +42,6 @@ class CacheLayer implements Parcelable {
       return new CacheLayer[size];
     }
   };
-  private static final BitmapFactory.Options OPTIONS = new BitmapFactory.Options();
 
   // Constructors---------------------------------------------------
 

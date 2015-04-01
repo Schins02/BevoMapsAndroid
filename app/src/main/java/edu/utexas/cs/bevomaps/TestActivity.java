@@ -15,6 +15,12 @@ import com.parse.ParseObject;
 import java.io.File;
 import java.util.Arrays;
 
+/**
+ * TestActivity.java
+ *
+ * Created by Eric on 3/28/15.
+ */
+
 public class TestActivity extends Activity implements View.OnClickListener{
 
   // Fields---------------------------------------------------------

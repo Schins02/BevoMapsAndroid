@@ -15,6 +15,8 @@ import java.net.URL;
 import java.util.Map;
 
 /**
+ * DownloadImageTask.java
+ *
  * Created by Eric on 3/29/15.
  */
 
