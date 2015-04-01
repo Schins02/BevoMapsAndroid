@@ -1,0 +1,13 @@
+01_http://i.imgur.com/biNivMT.png
+02_http://i.imgur.com/U6lFVzR.png
+03_http://i.imgur.com/h23LEbH.png
+04_http://i.imgur.com/EaH9WiS.png
+05_http://i.imgur.com/pBBq8gP.png
+06_http://i.imgur.com/MtLkfxL.png
+07_http://i.imgur.com/AlTNKb8.png
+defaultFloor_2
+shortName_GDC
+longName_Gates Dell Complex
+latitude_30.286144
+longitude_-97.736880
+thumbnail_https://www.utexas.edu/maps/main/buildings/graphics/buildings/gdc.jpg
