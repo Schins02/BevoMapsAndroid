@@ -15,16 +15,17 @@ import java.net.URL;
 import java.util.Map;
 
 /**
- * DownloadImageTask.java
+ * DownloadHelper.java
  *
  * Created by Eric on 3/29/15.
  */
 
-class DownloadImageTask extends AsyncTask <Void, Void, Bitmap> {
+class DownloadHelper extends AsyncTask <Void, Void, Bitmap> {
 
   // Fields---------------------------------------------------------
 
-  private static final String TAG = "DownloadImageTask";
+  private static final String TAG = "** DownloadHelper **";
+  private static final int BUFFER_SIZE = 102400;   //100KB
 
   private final File cacheDir;
   private final ImageView imageView;
@@ -33,8 +34,8 @@ class DownloadImageTask extends AsyncTask <Void, Void, Bitmap> {
 
   // Constructors---------------------------------------------------
 
-  DownloadImageTask(File cacheDir, ImageView imageView,
-                    Map<String, String> infoMap, String imageUrl) {
+  DownloadHelper(File cacheDir, ImageView imageView,
+                 Map<String, String> infoMap, String imageUrl) {
     this.cacheDir = cacheDir;
     this.imageView = imageView;
     this.infoMap = infoMap;
@@ -76,14 +77,14 @@ class DownloadImageTask extends AsyncTask <Void, Void, Bitmap> {
 
   @Override
   protected void onPostExecute(Bitmap image) {
-    if (imageView != null && image != null) {
+    if (image != null) {
       imageView.setImageBitmap(image);
 
       for (String key : infoMap.keySet()) {
         String url = infoMap.get(key);
 
-        if (!key.equals(CacheLayer.DEFAULT_FLOOR) &&
-            !key.equals(CacheLayer.NUM_FLOORS) &&
+        if (!key.equals(DataLayer.DEFAULT_FLOOR) &&
+            !key.equals(DataLayer.NUM_FLOORS) &&
             !url.equals(imageUrl)) {
           new CacheImageTask().execute(url);
         }
@@ -115,7 +116,7 @@ class DownloadImageTask extends AsyncTask <Void, Void, Bitmap> {
 
   private static void copyStream(InputStream in, OutputStream out)
       throws IOException {
-    byte[] buffer = new byte[102400];
+    byte[] buffer = new byte[BUFFER_SIZE];
     int length;
     while ((length = in.read(buffer)) > 0) {
       out.write(buffer, 0, length);
@@ -126,7 +127,6 @@ class DownloadImageTask extends AsyncTask <Void, Void, Bitmap> {
   }
 
   private class CacheImageTask extends AsyncTask<String, Void, Void> {
-
     @Override
     protected Void doInBackground(String... params) {
       HttpURLConnection connection = null;

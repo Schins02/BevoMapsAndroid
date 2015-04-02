@@ -24,12 +24,10 @@ class CacheLayer implements Parcelable {
   // Fields---------------------------------------------------------
 
   private static final String TAG = "CacheLayer";
-
-  private final File cacheDir;
   static final long CACHE_SIZE = 10485760; //10MB
 
+  private final File cacheDir;
   private HashMap<String, HashMap<String, String>> buildingMap;
-  static final String DEFAULT_FLOOR = "defaultFloor", NUM_FLOORS = "numFloors";
 
   private static final BitmapFactory.Options OPTIONS = new BitmapFactory.Options();
   public static final Creator<CacheLayer> CREATOR = new Creator<CacheLayer>() {
@@ -52,13 +50,13 @@ class CacheLayer implements Parcelable {
       Log.d(TAG, "Creating image cache.");
     }
 
-    new DownloadBuildingMapTask().execute();
+    new BuildingHelper().execute();
   }
 
   // Methods--------------------------------------------------------
 
   Map<String, String> getSearchMap() {
-    return null;
+    return new HashMap<>();
   }
 
   boolean isBuilding(String building) {
@@ -73,17 +71,15 @@ class CacheLayer implements Parcelable {
   void loadImage(ImageView imageView, String building, String floor) {
     String imageUrl = buildingMap.get(building).get(floor);
     if (imageUrl == null) {
-      imageUrl = buildingMap.get(building).get(DEFAULT_FLOOR);
+      imageUrl = buildingMap.get(building).get(DataLayer.DEFAULT_FLOOR);
     }
 
     File cacheFile = new File(cacheDir, getImageName(imageUrl));
     if (cacheFile.isFile()) {
-      Log.d(TAG, "Loading from cache.");
-      new LoadImageTask(cacheFile, imageView).execute();
+      new LoadHelper(cacheFile, imageView).execute();
     }
     else {
-      Log.d(TAG, "Loading from network.");
-      new DownloadImageTask(cacheDir, imageView, buildingMap.get(building), imageUrl).execute();
+      new DownloadHelper(cacheDir, imageView, buildingMap.get(building), imageUrl).execute();
     }
   }
 
@@ -120,9 +116,8 @@ class CacheLayer implements Parcelable {
     return 0;
   }
 
-  private class DownloadBuildingMapTask
+  private class BuildingHelper
       extends AsyncTask<Void, Void, HashMap<String, HashMap<String, String>>> {
-
     @Override
     protected HashMap<String, HashMap<String, String>> doInBackground(Void... params) {
       return DataLayer.getBuildingMap();

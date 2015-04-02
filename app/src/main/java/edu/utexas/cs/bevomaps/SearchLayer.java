@@ -1,7 +1,7 @@
 package edu.utexas.cs.bevomaps;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
  */
 
 class SearchLayer {
+
+  static final String BUILDING = "building", FLOOR = "floor";
 
   //Input: a string that the user searched for
   //Output: returns a map of "building" : building, and "floor" : floor
@@ -27,7 +29,7 @@ class SearchLayer {
       }
     }
 
-    Map<String, String> result = new HashMap<>();
+    Map<String, String> result = new TreeMap<>();
 
     // Find building name in the search string
     Pattern pattern = Pattern.compile("([a-zA-Z]{3})");
@@ -57,8 +59,8 @@ class SearchLayer {
       }
     }
 
-    result.put("building", building);
-    result.put("floor", floor);
+    result.put(BUILDING, building);
+    result.put(FLOOR, floor);
 
 	  return result;
   }

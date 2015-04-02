@@ -3,4 +3,5 @@
   <string name="button_menu">Menu</string>
   <string name="button_speech">Speech</string>
   <string name="search_hint">Search</string>
+  <string name="toast_invalid">NOT FOUND</string>
 </resources>

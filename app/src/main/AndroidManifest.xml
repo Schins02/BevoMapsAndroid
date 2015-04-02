@@ -19,8 +19,7 @@
         android:theme="@style/AppTheme" >
 
         <activity
-            android:name=".MapActivity"
-            android:enabled="true" >
+            android:name=".MapActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -33,15 +32,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MapActivity" />
-        </activity>
-
-        <activity
-            android:name=".TestActivity"
-            android:enabled="false" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <meta-data
