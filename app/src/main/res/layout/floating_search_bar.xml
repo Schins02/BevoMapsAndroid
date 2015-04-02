@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_margin="8dp"
+  android:orientation="horizontal"
+  android:background="@drawable/shadow_down" >
+
+  <ImageButton
+    android:id="@+id/menu"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:background="@color/material_white"
+    android:contentDescription="@string/button_menu" />
+
+  <ImageButton
+    android:id="@+id/speech"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:background="@color/material_white"
+    android:contentDescription="@string/button_speech" />
+
+  <EditText
+    android:id="@+id/search"
+    android:layout_height="48dp"
+    android:layout_width="fill_parent"
+    android:layout_toLeftOf="@id/speech"
+    android:layout_toStartOf="@id/speech"
+    android:layout_toRightOf="@id/menu"
+    android:layout_toEndOf="@id/menu"
+    android:background="@color/material_white"
+    android:cursorVisible="false"
+    android:hint="@string/search_hint"
+    android:imeOptions="actionSearch"
+    android:inputType="textNoSuggestions" />
+</RelativeLayout>
