@@ -86,7 +86,7 @@ class DownloadHelper extends AsyncTask <Void, Void, Bitmap> {
         if (!key.equals(DataLayer.DEFAULT_FLOOR) &&
             !key.equals(DataLayer.NUM_FLOORS) &&
             !url.equals(imageUrl)) {
-          new CacheImageTask().execute(url);
+          new CacheHelper().execute(url);
         }
       }
     }
@@ -126,7 +126,7 @@ class DownloadHelper extends AsyncTask <Void, Void, Bitmap> {
     out.close();
   }
 
-  private class CacheImageTask extends AsyncTask<String, Void, Void> {
+  private class CacheHelper extends AsyncTask<String, Void, Void> {
     @Override
     protected Void doInBackground(String... params) {
       HttpURLConnection connection = null;

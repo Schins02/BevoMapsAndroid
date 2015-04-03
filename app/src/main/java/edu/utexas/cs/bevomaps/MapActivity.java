@@ -4,15 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,9 +40,9 @@ public class MapActivity extends Activity {
   private CacheLayer cacheLayer;
 
   private BGHelper bgHelper;
+  private FABHelper fabHelper;
   private MapHelper mapHelper;
 
-  private FloatingActionButton followButton;
   private EditText textView;
 
   // Methods--------------------------------------------------------
@@ -57,24 +61,22 @@ public class MapActivity extends Activity {
     bgHelper.setOnTouchListener(new View.OnTouchListener() {
       @Override
       public boolean onTouch(View v, MotionEvent event) {
-        mapHelper.setFollowing(false);
         hideKeyboard();
+        mapHelper.setFollowing(false);
         return false;
       }
     });
-
     mapHelper = new MapHelper(this,
         (MapFragment)getFragmentManager().findFragmentById(R.id.map), cacheLayer);
-
-    followButton = (FloatingActionButton)findViewById(R.id.location);
-    followButton.setOnClickListener(new View.OnClickListener() {
+    fabHelper = new FABHelper((FloatingActionButton)findViewById(R.id.location));
+    fabHelper.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         mapHelper.setFollowing(true);
       }
     });
 
-    textView = (EditText)findViewById(R.id.search);
+    textView = (EditText)findViewById(R.id.text);
     textView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -84,9 +86,19 @@ public class MapActivity extends Activity {
     textView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
       @Override
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        prepareForSegue(SearchLayer.parseInputText(cacheLayer, textView.getText().toString()));
         hideKeyboard();
+        prepareForSegue(SearchLayer.parseInputText(cacheLayer, textView.getText().toString()));
         return true;
+      }
+    });
+
+    ImageButton menuButton = (ImageButton)findViewById(R.id.menu);
+    menuButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        hideKeyboard();
+        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer);
+        drawer.openDrawer(GravityCompat.START);
       }
     });
   }
@@ -104,19 +116,21 @@ public class MapActivity extends Activity {
   private void showKeyboard() {
     if (!textView.isCursorVisible()) {
       textView.setCursorVisible(true);
-      bgHelper.startAnimation(true);
+      bgHelper.fadeIn();
+      fabHelper.fadeOut();
     }
   }
 
   private void hideKeyboard() {
     if (textView.isCursorVisible()) {
       textView.setCursorVisible(false);
-      bgHelper.startAnimation(false);
+      bgHelper.fadeOut();
+      fabHelper.fadeIn();
 
       InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
       imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
 
-      mapHelper.invalidate();
+      mapHelper.redraw();
     }
   }
 
@@ -132,10 +146,18 @@ public class MapActivity extends Activity {
 
   private void configStatusBar() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      Window window = getWindow();
-      WindowManager.LayoutParams params = window.getAttributes();
-      params.flags |= WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-      window.setAttributes(params);
+      int id = getResources().getIdentifier("status_bar_height", "dimen", "android");
+      if (id > 0) {
+        Window window = getWindow();
+        WindowManager.LayoutParams attrs = window.getAttributes();
+        attrs.flags |= WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        window.setAttributes(attrs);
+
+        View fsb = findViewById(R.id.fsb);
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)fsb.getLayoutParams();
+        params.topMargin = getResources().getDimensionPixelSize(id);
+        fsb.setLayoutParams(params);
+      }
     }
   }
 

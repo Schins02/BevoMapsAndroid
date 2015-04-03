@@ -105,7 +105,7 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
     }
   }
 
-  void invalidate() {
+  void redraw() {
     view.invalidate();
   }
 

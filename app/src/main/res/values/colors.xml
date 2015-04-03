@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <color name="burnt_orange">#BF5700</color>
-  <color name="google_grey">#303030</color>
+  <color name="disabled_grey">#bdbdbd</color>
   <color name="material_white">#FAFAFA</color>
 </resources>
