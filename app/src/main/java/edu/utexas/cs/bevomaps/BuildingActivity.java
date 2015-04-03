@@ -8,6 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+
 import java.util.Map;
 
 /**
@@ -21,7 +24,7 @@ public class BuildingActivity extends ActionBarActivity {
     private android.support.v7.widget.Toolbar toolbar;
     private Map<String, String> mQueryMap;
     private static final String TAG = "BuildingView";
-    private ImageView mImageView;
+    SubsamplingScaleImageView mImageView;
 
 
     @Override
@@ -36,6 +39,8 @@ public class BuildingActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        mImageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
 
     }
 
