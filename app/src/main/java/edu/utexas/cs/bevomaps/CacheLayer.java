@@ -76,10 +76,10 @@ class CacheLayer implements Parcelable {
 
     File cacheFile = new File(cacheDir, getImageName(imageUrl));
     if (cacheFile.isFile()) {
-      new LoadHelper(cacheFile, imageView).execute();
+      new FileTask(cacheFile, imageView).execute();
     }
     else {
-      new DownloadHelper(cacheDir, imageView, buildingMap.get(building), imageUrl).execute();
+      new ImageTask(cacheDir, imageView, buildingMap.get(building), imageUrl).execute();
     }
   }
 
@@ -88,7 +88,7 @@ class CacheLayer implements Parcelable {
   }
 
   void loadMarkers(GoogleMap map) {
-
+    new MarkerTask(map).execute();
   }
 
   static BitmapFactory.Options getImageOptions() {

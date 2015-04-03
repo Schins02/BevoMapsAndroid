@@ -20,7 +20,7 @@ import java.util.Map;
  * Created by Eric on 3/29/15.
  */
 
-class DownloadHelper extends AsyncTask <Void, Void, Bitmap> {
+class ImageTask extends AsyncTask <Void, Void, Bitmap> {
 
   // Fields---------------------------------------------------------
 
@@ -34,8 +34,8 @@ class DownloadHelper extends AsyncTask <Void, Void, Bitmap> {
 
   // Constructors---------------------------------------------------
 
-  DownloadHelper(File cacheDir, ImageView imageView,
-                 Map<String, String> infoMap, String imageUrl) {
+  ImageTask(File cacheDir, ImageView imageView,
+            Map<String, String> infoMap, String imageUrl) {
     this.cacheDir = cacheDir;
     this.imageView = imageView;
     this.infoMap = infoMap;
@@ -86,7 +86,7 @@ class DownloadHelper extends AsyncTask <Void, Void, Bitmap> {
         if (!key.equals(DataLayer.DEFAULT_FLOOR) &&
             !key.equals(DataLayer.NUM_FLOORS) &&
             !url.equals(imageUrl)) {
-          new CacheHelper().execute(url);
+          new CacheTask().execute(url);
         }
       }
     }
@@ -126,7 +126,7 @@ class DownloadHelper extends AsyncTask <Void, Void, Bitmap> {
     out.close();
   }
 
-  private class CacheHelper extends AsyncTask<String, Void, Void> {
+  private class CacheTask extends AsyncTask<String, Void, Void> {
     @Override
     protected Void doInBackground(String... params) {
       HttpURLConnection connection = null;

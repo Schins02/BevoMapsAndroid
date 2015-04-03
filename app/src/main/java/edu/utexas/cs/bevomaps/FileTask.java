@@ -12,7 +12,7 @@ import java.io.File;
  * Created by Eric on 3/28/15.
  */
 
-class LoadHelper extends AsyncTask<Void, Void, Bitmap> {
+class FileTask extends AsyncTask<Void, Void, Bitmap> {
 
   // Fields---------------------------------------------------------
 
@@ -21,7 +21,7 @@ class LoadHelper extends AsyncTask<Void, Void, Bitmap> {
 
   // Constructors---------------------------------------------------
 
-  LoadHelper(File cacheFile, ImageView imageView) {
+  FileTask(File cacheFile, ImageView imageView) {
     this.cacheFile = cacheFile;
     this.imageView = imageView;
   }

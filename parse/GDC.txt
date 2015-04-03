@@ -1,10 +1,10 @@
-01_http://i.imgur.com/biNivMT.png
-02_http://i.imgur.com/U6lFVzR.png
-03_http://i.imgur.com/h23LEbH.png
-04_http://i.imgur.com/EaH9WiS.png
-05_http://i.imgur.com/pBBq8gP.png
-06_http://i.imgur.com/MtLkfxL.png
-07_http://i.imgur.com/AlTNKb8.png
+01_http://i.imgur.com/6AE475f.png
+02_http://i.imgur.com/79arO1M.png
+03_http://i.imgur.com/asKNJEq.png
+04_http://i.imgur.com/bP4Egdv.png
+05_http://i.imgur.com/vBjjbMt.png
+06_http://i.imgur.com/n5wUuNA.png
+07_http://i.imgur.com/6kXMGZs.png
 defaultFloor_2
 shortName_GDC
 longName_Gates Dell Complex

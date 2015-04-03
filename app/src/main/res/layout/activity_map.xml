@@ -23,7 +23,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:alpha="0"
-      android:background="@color/background_material_dark" />
+      android:background="@color/translucent_grey" />
 
     <com.getbase.floatingactionbutton.FloatingActionButton
       android:id="@+id/location"
@@ -32,7 +32,7 @@
       android:layout_alignParentBottom="true"
       android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
-      android:layout_margin="8dp"
+      android:layout_margin="6dp"
       fab:fab_icon="@drawable/ic_crosshair"
       fab:fab_colorNormal="@color/burnt_orange"
       fab:fab_colorPressed="@color/burnt_orange" />

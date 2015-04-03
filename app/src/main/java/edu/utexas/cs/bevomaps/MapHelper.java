@@ -14,6 +14,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -41,7 +42,8 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
 
   // Constructors---------------------------------------------------
 
-  MapHelper(Context context, MapFragment fragment, final CacheLayer cache) {
+  MapHelper(Context context, MapFragment fragment,
+            final CameraPosition position, final CacheLayer cache) {
     REQUEST.setInterval(INTERVAL);
     REQUEST.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -61,7 +63,9 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
 
         googleMap.setBuildingsEnabled(true);
         googleMap.setIndoorEnabled(false);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UT_TOWER, 17f));
+        googleMap.moveCamera(position != null ?
+            CameraUpdateFactory.newCameraPosition(position) :
+            CameraUpdateFactory.newLatLngZoom(UT_TOWER, 17f));
 
         marker = googleMap.addMarker(new MarkerOptions()
             .position(UT_TOWER)
@@ -103,6 +107,10 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
       LocationServices.FusedLocationApi.removeLocationUpdates(client, this);
       client.disconnect();
     }
+  }
+
+  CameraPosition getCameraPosition() {
+    return map.getCameraPosition();
   }
 
   void redraw() {
