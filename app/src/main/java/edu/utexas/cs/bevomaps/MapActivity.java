@@ -8,20 +8,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -115,9 +112,6 @@ public class MapActivity extends Activity {
         drawer.openDrawer(GravityCompat.START);
       }
     });
-
-    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
   }
 
   @Override
@@ -134,7 +128,7 @@ public class MapActivity extends Activity {
 
   private void prepareForSegue(Map<String, String> info) {
     String building = info.get(SearchLayer.BUILDING);
-    if (building != null || cacheLayer.isBuilding(building)) {
+    if (building != null && cacheLayer.isBuilding(building)) {
       Intent intent = new Intent(this, BuildingActivity.class);
       intent.putExtra("cache", cacheLayer);
       intent.putExtra("name", "Gates Dell Complex");   //TODO Change

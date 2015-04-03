@@ -1,13 +1,14 @@
 package edu.utexas.cs.bevomaps;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
-import android.widget.ImageView;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.google.android.gms.maps.GoogleMap;
 import java.io.File;
 import java.util.HashMap;
@@ -29,7 +30,6 @@ class CacheLayer implements Parcelable {
   private final File cacheDir;
   private HashMap<String, HashMap<String, String>> buildingMap;
 
-  private static final BitmapFactory.Options OPTIONS = new BitmapFactory.Options();
   public static final Creator<CacheLayer> CREATOR = new Creator<CacheLayer>() {
     @Override
     public CacheLayer createFromParcel(Parcel in) {
@@ -68,7 +68,7 @@ class CacheLayer implements Parcelable {
     return buildingMap.containsKey(building);
   }
 
-  void loadImage(ImageView imageView, String building, String floor) {
+  void loadImage(SubsamplingScaleImageView imageView, String building, String floor) {
     String imageUrl = buildingMap.get(building).get(floor);
     if (imageUrl == null) {
       imageUrl = buildingMap.get(building).get(DataLayer.DEFAULT_FLOOR);
@@ -76,7 +76,7 @@ class CacheLayer implements Parcelable {
 
     File cacheFile = new File(cacheDir, getImageName(imageUrl));
     if (cacheFile.isFile()) {
-      new FileTask(cacheFile, imageView).execute();
+      imageView.setImage(ImageSource.uri(Uri.fromFile(cacheFile)));
     }
     else {
       new ImageTask(cacheDir, imageView, buildingMap.get(building), imageUrl).execute();
@@ -89,11 +89,6 @@ class CacheLayer implements Parcelable {
 
   void loadMarkers(GoogleMap map) {
     new MarkerTask(map).execute();
-  }
-
-  static BitmapFactory.Options getImageOptions() {
-    OPTIONS.inSampleSize = 4;
-    return OPTIONS;
   }
 
   @SuppressWarnings("unchecked")
