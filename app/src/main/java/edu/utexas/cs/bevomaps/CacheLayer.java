@@ -8,10 +8,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import android.widget.ImageView;
+import com.google.android.gms.maps.GoogleMap;
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
+ * CacheLayer.java
+ *
  * Created by Eric on 3/28/15.
  */
 
@@ -19,6 +23,13 @@ class CacheLayer implements Parcelable {
 
   // Fields---------------------------------------------------------
 
+  private static final String TAG = "CacheLayer";
+  static final long CACHE_SIZE = 10485760; //10MB
+
+  private final File cacheDir;
+  private HashMap<String, HashMap<String, String>> buildingMap;
+
+  private static final BitmapFactory.Options OPTIONS = new BitmapFactory.Options();
   public static final Creator<CacheLayer> CREATOR = new Creator<CacheLayer>() {
     @Override
     public CacheLayer createFromParcel(Parcel in) {
@@ -31,24 +42,24 @@ class CacheLayer implements Parcelable {
     }
   };
 
-  static final long CACHE_SIZE = 1048576; // 1MB
-
-  private static final BitmapFactory.Options OPTIONS = new BitmapFactory.Options();
-  private static final String TAG = "CacheLayer",
-                              CACHE_DIR = "ImageCache",
-                              DEFAULT_FLOOR = "defaultFloor";
-
-  private HashMap<String, HashMap<String, String>> buildingMap;
-
   // Constructors---------------------------------------------------
 
-  CacheLayer() {
-    new DownloadBuildingMapTask().execute();
+  CacheLayer(Context context) {
+    cacheDir = new File(context.getCacheDir(), "ImageCache");
+    if (cacheDir.mkdir()) {
+      Log.d(TAG, "Creating image cache.");
+    }
+
+    new BuildingHelper().execute();
   }
 
   // Methods--------------------------------------------------------
 
-  boolean checkBulding (String building) {
+  Map<String, String> getSearchMap() {
+    return new HashMap<>();
+  }
+
+  boolean isBuilding(String building) {
     if (buildingMap == null) {
       Log.d(TAG, "Building map not loaded.");
       return false;
@@ -57,30 +68,27 @@ class CacheLayer implements Parcelable {
     return buildingMap.containsKey(building);
   }
 
-  void loadImage(Context context, ImageView imageView, String building, String floor) {
-    if (!checkBulding(building)) {
-      return;
-    }
-
+  void loadImage(ImageView imageView, String building, String floor) {
     String imageUrl = buildingMap.get(building).get(floor);
     if (imageUrl == null) {
-      imageUrl = buildingMap.get(building).get(DEFAULT_FLOOR);
-    }
-
-    File cacheDir = new File (context.getCacheDir(), CACHE_DIR);
-    if (cacheDir.mkdir()) {
-      Log.d(TAG, "Creating image cache.");
+      imageUrl = buildingMap.get(building).get(DataLayer.DEFAULT_FLOOR);
     }
 
     File cacheFile = new File(cacheDir, getImageName(imageUrl));
     if (cacheFile.isFile()) {
-      Log.d(TAG, "Loading from cache.");
-      new LoadImageTask(imageView).execute(cacheFile);
+      new LoadHelper(cacheFile, imageView).execute();
     }
     else {
-      Log.d(TAG, "Loading from network.");
-      new DownloadImageTask(cacheFile, imageView).execute(imageUrl);
+      new DownloadHelper(cacheDir, imageView, buildingMap.get(building), imageUrl).execute();
     }
+  }
+
+  static String getImageName(String url) {
+    return url.substring(url.lastIndexOf('/'));
+  }
+
+  void loadMarkers(GoogleMap map) {
+
   }
 
   static BitmapFactory.Options getImageOptions() {
@@ -88,20 +96,18 @@ class CacheLayer implements Parcelable {
     return OPTIONS;
   }
 
-  private static String getImageName(String url) {
-    return url.substring(url.lastIndexOf('/'));
-  }
-
   @SuppressWarnings("unchecked")
   private CacheLayer (Parcel in) {
     Bundle bundle = in.readBundle();
     buildingMap = (HashMap<String, HashMap<String, String>>)bundle.getSerializable("buildingMap");
+    cacheDir = (File)bundle.getSerializable("cacheDir");
   }
 
   @Override
   public void writeToParcel(Parcel out, int flags) {
     Bundle bundle = new Bundle();
     bundle.putSerializable("buildingMap", buildingMap);
+    bundle.putSerializable("cacheDir", cacheDir);
     out.writeBundle(bundle);
   }
 
@@ -110,7 +116,8 @@ class CacheLayer implements Parcelable {
     return 0;
   }
 
-  private class DownloadBuildingMapTask extends AsyncTask<Void, Void, HashMap<String, HashMap<String, String>>> {
+  private class BuildingHelper
+      extends AsyncTask<Void, Void, HashMap<String, HashMap<String, String>>> {
     @Override
     protected HashMap<String, HashMap<String, String>> doInBackground(Void... params) {
       return DataLayer.getBuildingMap();

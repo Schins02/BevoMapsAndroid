@@ -7,33 +7,36 @@ import android.widget.ImageView;
 import java.io.File;
 
 /**
+ * LoadHelper.java
+ *
  * Created by Eric on 3/28/15.
  */
 
-class LoadImageTask extends AsyncTask<File, Void, Bitmap> {
+class LoadHelper extends AsyncTask<Void, Void, Bitmap> {
 
   // Fields---------------------------------------------------------
 
-  private static final String TAG = "LoadImageTask";
+  private final File cacheFile;
   private final ImageView imageView;
 
   // Constructors---------------------------------------------------
 
-  LoadImageTask(ImageView imageView) {
+  LoadHelper(File cacheFile, ImageView imageView) {
+    this.cacheFile = cacheFile;
     this.imageView = imageView;
   }
 
   // Methods--------------------------------------------------------
 
   @Override
-  protected Bitmap doInBackground(File... params) {
-    return BitmapFactory.decodeFile(params[0].getPath(),
+  protected Bitmap doInBackground(Void... params) {
+    return BitmapFactory.decodeFile(cacheFile.getPath(),
         CacheLayer.getImageOptions());
   }
 
   @Override
   protected void onPostExecute(Bitmap image) {
-    if (imageView != null && image != null) {
+    if (image != null) {
       imageView.setImageBitmap(image);
     }
   }

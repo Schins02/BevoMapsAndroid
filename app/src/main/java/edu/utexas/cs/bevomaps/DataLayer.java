@@ -10,12 +10,16 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * DataLayer.java
+ *
  * Created by John on 3/18/2015.
  */
 
 class DataLayer {
 
-    private static final String TAG = "DataLayer";
+    private static final String TAG = "** DataLayer **";
+
+    static final String DEFAULT_FLOOR = "defaultFloor", NUM_FLOORS = "numFloors";
 
     /**
      * Method to get HashMap of HashMaps containing data for each building
