@@ -83,7 +83,7 @@ class DataLayer {
      *
      * @return List of HashMaps containing marker data
      */
-    static List<Map<String, String>> getMarkerList() { //TODO convert to ArrayList if needed and change MarkerTask
+    static List<Map<String, String>> getMarkerList() {
 
         ParseQuery<BuildingJSON> query = ParseQuery.getQuery("BuildingJSON");
         query = query.whereEqualTo("pk", "jsonObj");

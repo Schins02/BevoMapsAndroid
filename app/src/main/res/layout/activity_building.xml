@@ -18,10 +18,5 @@
     android:alpha="0"
     android:background="@color/translucent_grey" />
 
-  <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-    android:id="@+id/imageView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
-
   <include layout="@layout/action_bar" />
 </RelativeLayout>
