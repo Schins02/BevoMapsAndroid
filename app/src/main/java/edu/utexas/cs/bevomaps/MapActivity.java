@@ -125,9 +125,11 @@ public class MapActivity extends Activity {
       Intent intent = new Intent(this, BuildingActivity.class);
       intent.putExtra("cache", cacheLayer);
       intent.putExtra("name", "Gates Dell Complex");   //TODO Change
-      intent.putExtra(SearchLayer.BUILDING, info.get(SearchLayer.BUILDING));
+      intent.putExtra(SearchLayer.BUILDING, building);
       intent.putExtra(SearchLayer.FLOOR, info.get(SearchLayer.FLOOR));
-    } else {
+      startActivity(intent);
+    }
+    else {
       Toast.makeText(this, R.string.toast_invalid, Toast.LENGTH_SHORT).show();
     }
   }
