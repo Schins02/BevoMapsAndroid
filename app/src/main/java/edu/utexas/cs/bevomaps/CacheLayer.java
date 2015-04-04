@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
-import com.davemorrissey.labs.subscaleview.ImageSource;
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.google.android.gms.maps.GoogleMap;
 import java.io.File;
 import java.util.HashMap;
@@ -68,7 +66,7 @@ class CacheLayer implements Parcelable {
     return buildingMap.containsKey(building);
   }
 
-  void loadImage(SubsamplingScaleImageView imageView, String building, String floor) {
+  void loadImage(ImageHelper imageHelper, String building, String floor) {
     String imageUrl = buildingMap.get(building).get(floor);
     if (imageUrl == null) {
       imageUrl = buildingMap.get(building).get(DataLayer.DEFAULT_FLOOR);
@@ -76,10 +74,10 @@ class CacheLayer implements Parcelable {
 
     File cacheFile = new File(cacheDir, getImageName(imageUrl));
     if (cacheFile.isFile()) {
-      imageView.setImage(ImageSource.uri(Uri.fromFile(cacheFile)));
+      imageHelper.setImage(Uri.fromFile(cacheFile));
     }
     else {
-      new ImageTask(cacheDir, imageView, buildingMap.get(building), imageUrl).execute();
+      new ImageTask(cacheDir, imageHelper, buildingMap.get(building), imageUrl).execute();
     }
   }
 

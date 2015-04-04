@@ -2,7 +2,8 @@ package edu.utexas.cs.bevomaps;
 
 import android.os.AsyncTask;
 import com.google.android.gms.maps.GoogleMap;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * MarkerTask.java
@@ -10,7 +11,7 @@ import java.util.List;
  * Created by Eric on 4/3/15.
  */
 
-class MarkerTask extends AsyncTask<Void, Void, List<String>> {
+class MarkerTask extends AsyncTask<Void, Void, ArrayList<HashMap<String, String>>> {
 
   // Fields---------------------------------------------------------
 
@@ -25,12 +26,12 @@ class MarkerTask extends AsyncTask<Void, Void, List<String>> {
   // Methods--------------------------------------------------------
 
   @Override
-  protected List<String> doInBackground(Void... params) {
+  protected ArrayList<HashMap<String, String>> doInBackground(Void... params) {
     return DataLayer.getMarkerList();
   }
 
   @Override
-  protected void onPostExecute(List<String> list) {
+  protected void onPostExecute(ArrayList<HashMap<String, String>> list) {
 
   }
 }

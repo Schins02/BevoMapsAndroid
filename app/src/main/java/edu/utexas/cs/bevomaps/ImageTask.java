@@ -3,8 +3,6 @@ package edu.utexas.cs.bevomaps;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import com.davemorrissey.labs.subscaleview.ImageSource;
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,16 +26,16 @@ class ImageTask extends AsyncTask <Void, Void, Uri> {
   private static final int BUFFER_SIZE = 102400;   //100KB
 
   private final File cacheDir;
-  private final SubsamplingScaleImageView imageView;
+  private final ImageHelper imageHelper;
   private final Map<String, String> infoMap;
   private final String imageUrl;
 
   // Constructors---------------------------------------------------
 
-  ImageTask(File cacheDir, SubsamplingScaleImageView imageView,
+  ImageTask(File cacheDir, ImageHelper imageHelper,
             Map<String, String> infoMap, String imageUrl) {
     this.cacheDir = cacheDir;
-    this.imageView = imageView;
+    this.imageHelper = imageHelper;
     this.infoMap = infoMap;
     this.imageUrl = imageUrl;
   }
@@ -77,7 +75,7 @@ class ImageTask extends AsyncTask <Void, Void, Uri> {
   @Override
   protected void onPostExecute(Uri uri) {
     if (uri != null) {
-      imageView.setImage(ImageSource.uri(uri));
+      imageHelper.setImage(uri);
 
       for (String key : infoMap.keySet()) {
         String url = infoMap.get(key);

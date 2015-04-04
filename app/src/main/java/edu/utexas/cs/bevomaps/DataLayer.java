@@ -5,9 +5,9 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * DataLayer.java
@@ -18,7 +18,6 @@ import java.util.List;
 class DataLayer {
 
     private static final String TAG = "** DataLayer **";
-
     static final String DEFAULT_FLOOR = "defaultFloor", NUM_FLOORS = "numFloors";
 
     /**
@@ -78,7 +77,7 @@ class DataLayer {
             return null;
     }
 
-    static List<String> getMarkerList() {
+    static ArrayList<HashMap<String, String>> getMarkerList() {
         return null;
     }
 
