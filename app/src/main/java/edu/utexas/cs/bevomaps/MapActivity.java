@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +56,7 @@ public class MapActivity extends Activity {
 
     cacheLayer = new CacheLayer(this);
 
-    bgHelper = new BGHelper(findViewById(R.id.background));
+    bgHelper = new BGHelper(findViewById(R.id.map_background));
     bgHelper.setOnTouchListener(new View.OnTouchListener() {
       @Override
       public boolean onTouch(View v, MotionEvent event) {
@@ -71,9 +70,10 @@ public class MapActivity extends Activity {
         return false;
       }
     });
-    mapHelper = new MapHelper(this, (MapFragment)getFragmentManager().findFragmentById(R.id.map),
+    mapHelper = new MapHelper(this,
+        (MapFragment)getFragmentManager().findFragmentById(R.id.map_map),
         in != null ? (CameraPosition)in.getParcelable("cameraPosition") : null, cacheLayer);
-    fabHelper = new FABHelper((FloatingActionButton)findViewById(R.id.location));
+    fabHelper = new FABHelper((FloatingActionButton)findViewById(R.id.map_location));
     fabHelper.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -81,7 +81,7 @@ public class MapActivity extends Activity {
       }
     });
 
-    textView = (EditText)findViewById(R.id.text);
+    textView = (EditText)findViewById(R.id.fsb_text);
     textView.setText(in != null ? in.getString("searchText") : "");
     textView.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -100,7 +100,7 @@ public class MapActivity extends Activity {
       }
     });
 
-    ImageButton menuButton = (ImageButton)findViewById(R.id.menu);
+    ImageButton menuButton = (ImageButton)findViewById(R.id.fsb_menu);
     menuButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -108,7 +108,7 @@ public class MapActivity extends Activity {
           hideKeyboard();
         }
 
-        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer);
+        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.map_drawer);
         drawer.openDrawer(GravityCompat.START);
       }
     });
@@ -118,12 +118,6 @@ public class MapActivity extends Activity {
   protected void onSaveInstanceState(@NonNull Bundle out) {
     out.putParcelable("cameraPosition", mapHelper.getCameraPosition());
     out.putString("searchText", textView.getText().toString());
-  }
-
-  @Override
-  protected void onNewIntent(Intent intent) {
-    super.onNewIntent(intent);
-    mapHelper.redraw();
   }
 
   private void prepareForSegue(Map<String, String> info) {
@@ -197,10 +191,5 @@ public class MapActivity extends Activity {
     if (textView.isCursorVisible()) {
       hideKeyboard();
     }
-  }
-
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    return false;
   }
 }

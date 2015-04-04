@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="60dp"
+  android:background="@drawable/shadow_down" >
+
+  <ImageButton
+    android:id="@+id/ab_back"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_marginBottom="3dp"
+    android:background="@color/burnt_orange"
+    android:contentDescription="@string/button_back"
+    android:src="@drawable/back" />
+
+  <ImageButton
+    android:id="@+id/ab_search"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:layout_marginBottom="3dp"
+    android:background="@color/burnt_orange"
+    android:contentDescription="@string/button_search"
+    android:src="@drawable/ic_search" />
+
+  <TextView
+    android:id="@+id/ab_title"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="3dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_toLeftOf="@id/ab_search"
+    android:layout_toStartOf="@id/ab_search"
+    android:layout_toRightOf="@id/ab_back"
+    android:layout_toEndOf="@id/ab_back"
+    android:gravity="center_vertical"
+    android:textColor="@color/material_white"
+    android:textSize="20sp" />
+
+  <RelativeLayout
+    android:id="@+id/ab_search_bar"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:layout_margin="8dp"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:layout_marginBottom="3dp"
+    android:alpha="0"
+    android:background="@color/material_white"
+    android:scaleX="0"
+    android:visibility="invisible" >
+
+    <ImageButton
+      android:id="@+id/ab_speech"
+      android:layout_width="48dp"
+      android:layout_height="48dp"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentEnd="true"
+      android:background="@color/material_white"
+      android:contentDescription="@string/button_speech"
+      android:src="@drawable/ic_speech" />
+
+    <EditText
+      android:id="@+id/ab_text"
+      android:layout_height="match_parent"
+      android:layout_width="match_parent"
+      android:layout_marginLeft="16dp"
+      android:layout_marginStart="16dp"
+      android:layout_toLeftOf="@id/ab_speech"
+      android:layout_toStartOf="@id/ab_speech"
+      android:background="@color/material_white"
+      android:hint="@string/search_hint"
+      android:imeOptions="actionSearch"
+      android:inputType="textNoSuggestions"
+      android:textColorHint="@color/disabled_grey"
+      android:textSize="16sp" />
+  </RelativeLayout>
+</RelativeLayout>

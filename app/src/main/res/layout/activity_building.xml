@@ -1,7 +1,17 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="edu.utexas.cs.bevomaps.BuildingActivity">
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context="edu.utexas.cs.bevomaps.BuildingActivity" >
 
+  <View
+    android:id="@+id/building_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:alpha="0"
+    android:background="@color/translucent_grey" />
+
+  <include layout="@layout/action_bar" />
 </RelativeLayout>

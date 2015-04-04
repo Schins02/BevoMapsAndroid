@@ -4,10 +4,11 @@
   android:id="@+id/fsb"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:background="@drawable/shadow_down" >
+  android:layout_margin="4dp"
+  android:background="@drawable/shadow_box" >
 
   <ImageButton
-    android:id="@+id/menu"
+    android:id="@+id/fsb_menu"
     android:layout_width="48dp"
     android:layout_height="48dp"
     android:layout_alignParentLeft="true"
@@ -17,23 +18,23 @@
     android:src="@drawable/ic_menu" />
 
   <ImageButton
-    android:id="@+id/speech"
+    android:id="@+id/fsb_speech"
     android:layout_width="48dp"
     android:layout_height="48dp"
     android:layout_alignParentRight="true"
     android:layout_alignParentEnd="true"
     android:background="@color/material_white"
     android:contentDescription="@string/button_speech"
-    android:src="@drawable/ic_search"/>
+    android:src="@drawable/ic_speech"/>
 
   <EditText
-    android:id="@+id/text"
+    android:id="@+id/fsb_text"
     android:layout_height="48dp"
     android:layout_width="match_parent"
-    android:layout_toLeftOf="@id/speech"
-    android:layout_toStartOf="@id/speech"
-    android:layout_toRightOf="@id/menu"
-    android:layout_toEndOf="@id/menu"
+    android:layout_toLeftOf="@id/fsb_speech"
+    android:layout_toStartOf="@id/fsb_speech"
+    android:layout_toRightOf="@id/fsb_menu"
+    android:layout_toEndOf="@id/fsb_menu"
     android:background="@color/material_white"
     android:cursorVisible="false"
     android:hint="@string/search_hint"

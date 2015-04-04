@@ -3,7 +3,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:fab="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/drawer"
+  android:id="@+id/map_drawer"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   tools:context="edu.utexas.cs.bevomaps.MapActivity" >
@@ -13,20 +13,20 @@
     android:layout_height="match_parent" >
 
     <fragment
-      android:id="@+id/map"
+      android:id="@+id/map_map"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:name="com.google.android.gms.maps.MapFragment" />
 
     <View
-      android:id="@+id/background"
+      android:id="@+id/map_background"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:alpha="0"
       android:background="@color/translucent_grey" />
 
     <com.getbase.floatingactionbutton.FloatingActionButton
-      android:id="@+id/location"
+      android:id="@+id/map_location"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
