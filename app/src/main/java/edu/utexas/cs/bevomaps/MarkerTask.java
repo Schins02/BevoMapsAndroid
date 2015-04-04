@@ -4,8 +4,8 @@ import android.os.AsyncTask;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * MarkerTask.java
@@ -13,7 +13,7 @@ import java.util.List;
  * Created by Eric on 4/3/15.
  */
 
-class MarkerTask extends AsyncTask<Void, Void, List<HashMap<String, String>>> {
+class MarkerTask extends AsyncTask<Void, Void, List<Map<String, String>>> {
 
   // Fields---------------------------------------------------------
 
@@ -28,13 +28,13 @@ class MarkerTask extends AsyncTask<Void, Void, List<HashMap<String, String>>> {
   // Methods--------------------------------------------------------
 
   @Override
-  protected List<HashMap<String, String>> doInBackground(Void... params) {
+  protected List<Map<String, String>> doInBackground(Void... params) {
     return DataLayer.getMarkerList();
   }
 
   @Override
-  protected void onPostExecute(List<HashMap<String, String>> list) {
-    for (HashMap<String, String> buildingMarker : list) {
+  protected void onPostExecute(List<Map<String, String>> list) {
+    for (Map<String, String> buildingMarker : list) {
       map.addMarker(new MarkerOptions()
          .position(new LatLng(Double.parseDouble(buildingMarker.get("latitude")),
              Double.parseDouble(buildingMarker.get("longitude")))));
