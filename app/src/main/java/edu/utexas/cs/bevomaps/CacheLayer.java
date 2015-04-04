@@ -27,6 +27,7 @@ class CacheLayer implements Parcelable {
 
   private final File cacheDir;
   private HashMap<String, HashMap<String, String>> buildingMap;
+  private HashMap<String, String> searchMap;
 
   public static final Creator<CacheLayer> CREATOR = new Creator<CacheLayer>() {
     @Override
@@ -49,12 +50,17 @@ class CacheLayer implements Parcelable {
     }
 
     new BuildingHelper().execute();
+    new SearchHelper().execute();
   }
 
   // Methods--------------------------------------------------------
 
   Map<String, String> getSearchMap() {
-    return new HashMap<>();
+    if (searchMap == null) {
+      Log.d(TAG, "Search map not loaded.");
+    }
+
+    return searchMap;
   }
 
   boolean isBuilding(String building) {
@@ -94,15 +100,17 @@ class CacheLayer implements Parcelable {
   @SuppressWarnings("unchecked")
   private CacheLayer (Parcel in) {
     Bundle bundle = in.readBundle();
-    buildingMap = (HashMap<String, HashMap<String, String>>)bundle.getSerializable("buildingMap");
     cacheDir = (File)bundle.getSerializable("cacheDir");
+    buildingMap = (HashMap<String, HashMap<String, String>>)bundle.getSerializable("buildingMap");
+    searchMap = (HashMap<String, String>)bundle.getSerializable("searchMap");
   }
 
   @Override
   public void writeToParcel(Parcel out, int flags) {
     Bundle bundle = new Bundle();
-    bundle.putSerializable("buildingMap", buildingMap);
     bundle.putSerializable("cacheDir", cacheDir);
+    bundle.putSerializable("buildingMap", buildingMap);
+    bundle.putSerializable("searchMap", searchMap);
     out.writeBundle(bundle);
   }
 
@@ -121,6 +129,19 @@ class CacheLayer implements Parcelable {
     @Override
     protected void onPostExecute(HashMap<String, HashMap<String, String>> map) {
       buildingMap = map;
+    }
+  }
+
+  private class SearchHelper
+      extends AsyncTask<Void, Void, HashMap<String, String>> {
+    @Override
+    protected HashMap<String, String> doInBackground(Void... params) {
+      return DataLayer.getSearchMap();
+    }
+
+    @Override
+    protected void onPostExecute(HashMap<String, String> map) {
+      searchMap = map;
     }
   }
 }

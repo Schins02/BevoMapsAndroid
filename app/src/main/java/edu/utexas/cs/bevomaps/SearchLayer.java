@@ -23,9 +23,11 @@ class SearchLayer {
 
     //Map of common searches to the building or floor
     Map<String,String> cache_map = c.getSearchMap();
-    for(String t: strings){
-      if(cache_map.containsKey(t.toLowerCase())){
-        s = s.replaceAll(t, cache_map.get(t).toLowerCase());
+    if(cache_map != null) {
+      for (String t : strings) {
+        if (cache_map.containsKey(t.toLowerCase())) {
+          s = s.replaceAll(t, cache_map.get(t).toLowerCase());
+        }
       }
     }
 
