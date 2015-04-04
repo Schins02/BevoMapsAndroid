@@ -5,9 +5,9 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * DataLayer.java
@@ -51,7 +51,7 @@ class DataLayer {
     private static HashMap<String, HashMap<String, String>> extractImageMap(BuildingJSON buildingJSON) {
 
         HashMap<String, HashMap<String, String>> imageMaps = new HashMap<>();
-        JSONObject json = buildingJSON.getJSONObject("Buildings");
+        JSONObject json = buildingJSON.getBuildingJSON();
         Iterator<String> iter = json.keys();
         while (iter.hasNext()) {
             String building = iter.next();
@@ -77,7 +77,26 @@ class DataLayer {
             return null;
     }
 
-    static ArrayList<HashMap<String, String>> getMarkerList() {
+    /**
+     * Method to get list of Marker data from Parse
+     *
+     * @return List of HashMaps containing marker data
+     */
+    static List<HashMap<String, String>> getMarkerList() { //TODO convert to ArrayList if needed and change MarkerTask
+
+        ParseQuery<BuildingJSON> query = ParseQuery.getQuery("BuildingJSON");
+        query = query.whereEqualTo("pk", "jsonObj");
+
+        try {
+            BuildingJSON parseBuildingJSON = query.getFirst();
+            if (parseBuildingJSON != null){
+                return parseBuildingJSON.getMarkerList();
+            }
+
+        } catch (ParseException e) {
+            Log.e(TAG, e.toString());
+        }
+
         return null;
     }
 

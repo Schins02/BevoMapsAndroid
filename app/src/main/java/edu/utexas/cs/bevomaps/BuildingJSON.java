@@ -4,6 +4,9 @@ import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * BuildingJSON.java
  *
@@ -14,5 +17,9 @@ import org.json.JSONObject;
 public class BuildingJSON extends ParseObject {
     public JSONObject getBuildingJSON() {
       return getJSONObject("Buildings");
+    }
+
+    public List<HashMap<String, String>> getMarkerList() {
+        return getList("Markers");
     }
 }
