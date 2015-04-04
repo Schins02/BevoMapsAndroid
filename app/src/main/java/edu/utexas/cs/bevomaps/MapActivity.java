@@ -133,7 +133,8 @@ public class MapActivity extends Activity {
       intent.putExtra("cache", cacheLayer);
       intent.putExtra("name", "Gates Dell Complex");   //TODO Change
       intent.putExtra(SearchLayer.BUILDING, info.get(SearchLayer.BUILDING));
-      intent.putExtra(SearchLayer.FLOOR, info.get(SearchLayer.FLOOR));
+      //intent.putExtra(SearchLayer.FLOOR, info.get(SearchLayer.FLOOR));  //TODO Change
+      intent.putExtra(SearchLayer.FLOOR, "02");
       startActivity(intent);
     }
     else {
