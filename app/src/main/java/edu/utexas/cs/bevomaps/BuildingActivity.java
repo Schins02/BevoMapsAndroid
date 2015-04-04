@@ -11,7 +11,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 /**
  * BuildingActivity.java
- *
+ * <p/>
  * Created by Eric on 3/28/15.
  */
 
@@ -34,7 +34,7 @@ public class BuildingActivity extends Activity {
 
     Intent intent = getIntent();
     cacheLayer = intent.getParcelableExtra("cache");
-    imageHelper= new ImageHelper((SubsamplingScaleImageView)findViewById(R.id.building_image));
+    imageHelper = new ImageHelper((SubsamplingScaleImageView) findViewById(R.id.building_image));
     cacheLayer.loadImage(imageHelper, intent.getStringExtra(SearchLayer.BUILDING),
         intent.getStringExtra(SearchLayer.FLOOR));
 
@@ -71,12 +71,12 @@ public class BuildingActivity extends Activity {
   }
 
   private void showKeyboard() {
-    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     imm.showSoftInput(abHelper.getEditText(), 0);
   }
 
   private void hideKeyboard() {
-    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     imm.hideSoftInputFromWindow(abHelper.getEditText().getWindowToken(), 0);
   }
 }
