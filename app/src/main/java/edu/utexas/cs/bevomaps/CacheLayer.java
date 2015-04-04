@@ -68,7 +68,6 @@ class CacheLayer implements Parcelable {
 
   void loadImage(ImageHelper imageHelper, String building, String floor) {
     Map <String, String> buildingInfo = buildingMap.get(building);
-    Log.d(TAG, buildingInfo.toString());
 
     String imageUrl = buildingInfo.get(floor);
     if (imageUrl == null) {

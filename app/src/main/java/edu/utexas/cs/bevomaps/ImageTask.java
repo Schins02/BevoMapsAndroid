@@ -22,7 +22,7 @@ class ImageTask extends AsyncTask <Void, Void, Uri> {
 
   // Fields---------------------------------------------------------
 
-  private static final String TAG = "** DownloadHelper **";
+  private static final String TAG = "** ImageTask **";
   private static final int BUFFER_SIZE = 102400;   //100KB
 
   private final File cacheDir;

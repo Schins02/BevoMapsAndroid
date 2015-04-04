@@ -2,9 +2,7 @@ package edu.utexas.cs.bevomaps;
 
 import android.os.AsyncTask;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.HashMap;
 import java.util.List;
@@ -17,33 +15,29 @@ import java.util.List;
 
 class MarkerTask extends AsyncTask<Void, Void, List<HashMap<String, String>>> {
 
-    // Fields---------------------------------------------------------
+  // Fields---------------------------------------------------------
 
-    private final GoogleMap map;
+  private final GoogleMap map;
 
-    // Constructors---------------------------------------------------
+  // Constructors---------------------------------------------------
 
-    MarkerTask(GoogleMap map) {
-        this.map = map;
+  MarkerTask(GoogleMap map) {
+    this.map = map;
+  }
+
+  // Methods--------------------------------------------------------
+
+  @Override
+  protected List<HashMap<String, String>> doInBackground(Void... params) {
+    return DataLayer.getMarkerList();
+  }
+
+  @Override
+  protected void onPostExecute(List<HashMap<String, String>> list) {
+    for (HashMap<String, String> buildingMarker : list) {
+      map.addMarker(new MarkerOptions()
+         .position(new LatLng(Double.parseDouble(buildingMarker.get("latitude")),
+             Double.parseDouble(buildingMarker.get("longitude")))));
     }
-
-    // Methods--------------------------------------------------------
-
-    @Override
-    protected List<HashMap<String, String>> doInBackground(Void... params) {
-        return DataLayer.getMarkerList();
-    }
-
-    @Override
-    protected void onPostExecute(List<HashMap<String, String>> markerList) {
-        for (HashMap<String, String> buildingMarker : markerList) {
-                    map.addMarker(new MarkerOptions()
-                    .position(new LatLng(Double.parseDouble(buildingMarker.get("latitude")), Double.parseDouble(buildingMarker.get("longitude"))))
-                            .title(buildingMarker.get("shortName"))
-                            .snippet(buildingMarker.get("longName"))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-            );
-        }
-    }
-
+  }
 }

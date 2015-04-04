@@ -3,7 +3,6 @@ package edu.utexas.cs.bevomaps;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.List;
 
