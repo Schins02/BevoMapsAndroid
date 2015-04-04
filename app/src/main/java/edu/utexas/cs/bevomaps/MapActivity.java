@@ -2,26 +2,26 @@ package edu.utexas.cs.bevomaps;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseObject;
@@ -48,8 +48,8 @@ public class MapActivity extends Activity {
   // Methods--------------------------------------------------------
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  protected void onCreate(Bundle in) {
+    super.onCreate(in);
     setContentView(R.layout.activity_map);
 
     configParse();
@@ -61,13 +61,18 @@ public class MapActivity extends Activity {
     bgHelper.setOnTouchListener(new View.OnTouchListener() {
       @Override
       public boolean onTouch(View v, MotionEvent event) {
-        hideKeyboard();
-        mapHelper.setFollowing(false);
+        if (textView.isCursorVisible()) {
+          hideKeyboard();
+        }
+        else {
+          mapHelper.setFollowing(false);
+        }
+
         return false;
       }
     });
-    mapHelper = new MapHelper(this,
-        (MapFragment)getFragmentManager().findFragmentById(R.id.map), cacheLayer);
+    mapHelper = new MapHelper(this, (MapFragment)getFragmentManager().findFragmentById(R.id.map),
+        in != null ? (CameraPosition)in.getParcelable("cameraPosition") : null, cacheLayer);
     fabHelper = new FABHelper((FloatingActionButton)findViewById(R.id.location));
     fabHelper.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -77,10 +82,13 @@ public class MapActivity extends Activity {
     });
 
     textView = (EditText)findViewById(R.id.text);
+    textView.setText(in != null ? in.getString("searchText") : "");
     textView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        showKeyboard();
+        if (!textView.isCursorVisible()) {
+          showKeyboard();
+        }
       }
     });
     textView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -96,42 +104,58 @@ public class MapActivity extends Activity {
     menuButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        hideKeyboard();
+        if (textView.isCursorVisible()) {
+          hideKeyboard();
+        }
+
         DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer);
         drawer.openDrawer(GravityCompat.START);
       }
     });
   }
 
+  @Override
+  protected void onSaveInstanceState(@NonNull Bundle out) {
+    out.putParcelable("cameraPosition", mapHelper.getCameraPosition());
+    out.putString("searchText", textView.getText().toString());
+  }
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    mapHelper.redraw();
+  }
+
   private void prepareForSegue(Map<String, String> info) {
     String building = info.get(SearchLayer.BUILDING);
-    if (building == null || !cacheLayer.isBuilding(building)) {
-      Toast.makeText(this, R.string.toast_invalid, Toast.LENGTH_SHORT).show();
+    if (building != null && cacheLayer.isBuilding(building)) {
+      Intent intent = new Intent(this, BuildingActivity.class);
+      intent.putExtra("cache", cacheLayer);
+      intent.putExtra("name", "Gates Dell Complex");   //TODO Change
+      intent.putExtra(SearchLayer.BUILDING, info.get(SearchLayer.BUILDING));
+      intent.putExtra(SearchLayer.FLOOR, info.get(SearchLayer.FLOOR));
+      startActivity(intent);
     }
     else {
-      Log.d("MapActivity", "Intent => " + info.toString());
+      Toast.makeText(this, R.string.toast_invalid, Toast.LENGTH_SHORT).show();
     }
   }
 
   private void showKeyboard() {
-    if (!textView.isCursorVisible()) {
-      textView.setCursorVisible(true);
-      bgHelper.fadeIn();
-      fabHelper.fadeOut();
-    }
+    textView.setCursorVisible(true);
+    bgHelper.fadeIn();
+    fabHelper.fadeOut();
   }
 
   private void hideKeyboard() {
-    if (textView.isCursorVisible()) {
-      textView.setCursorVisible(false);
-      bgHelper.fadeOut();
-      fabHelper.fadeIn();
+    textView.setCursorVisible(false);
+    bgHelper.fadeOut();
+    fabHelper.fadeIn();
 
-      InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-      imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+    imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
 
-      mapHelper.redraw();
-    }
+    mapHelper.redraw();
   }
 
   private void configParse() {
@@ -148,10 +172,8 @@ public class MapActivity extends Activity {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       int id = getResources().getIdentifier("status_bar_height", "dimen", "android");
       if (id > 0) {
-        Window window = getWindow();
-        WindowManager.LayoutParams attrs = window.getAttributes();
-        attrs.flags |= WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        window.setAttributes(attrs);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+            WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
         View fsb = findViewById(R.id.fsb);
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)fsb.getLayoutParams();
@@ -171,7 +193,10 @@ public class MapActivity extends Activity {
   public void onResume() {
     super.onResume();
     mapHelper.connect();
-    hideKeyboard();
+
+    if (textView.isCursorVisible()) {
+      hideKeyboard();
+    }
   }
 
   @Override

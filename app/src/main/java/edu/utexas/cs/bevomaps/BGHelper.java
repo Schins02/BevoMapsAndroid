@@ -26,7 +26,7 @@ class BGHelper {
 
   void fadeIn() {
     view.animate()
-        .alpha(0.3f)
+        .alpha(1)
         .setDuration(FADE_DURATION);
   }
 

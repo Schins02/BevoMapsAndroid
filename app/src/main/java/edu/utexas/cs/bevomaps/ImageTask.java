@@ -1,10 +1,10 @@
 package edu.utexas.cs.bevomaps;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ImageView;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import java.util.Map;
  * Created by Eric on 3/29/15.
  */
 
-class DownloadHelper extends AsyncTask <Void, Void, Bitmap> {
+class ImageTask extends AsyncTask <Void, Void, Uri> {
 
   // Fields---------------------------------------------------------
 
@@ -28,14 +28,14 @@ class DownloadHelper extends AsyncTask <Void, Void, Bitmap> {
   private static final int BUFFER_SIZE = 102400;   //100KB
 
   private final File cacheDir;
-  private final ImageView imageView;
+  private final SubsamplingScaleImageView imageView;
   private final Map<String, String> infoMap;
   private final String imageUrl;
 
   // Constructors---------------------------------------------------
 
-  DownloadHelper(File cacheDir, ImageView imageView,
-                 Map<String, String> infoMap, String imageUrl) {
+  ImageTask(File cacheDir, SubsamplingScaleImageView imageView,
+            Map<String, String> infoMap, String imageUrl) {
     this.cacheDir = cacheDir;
     this.imageView = imageView;
     this.infoMap = infoMap;
@@ -50,7 +50,7 @@ class DownloadHelper extends AsyncTask <Void, Void, Bitmap> {
   }
 
   @Override
-  protected Bitmap doInBackground(Void... params) {
+  protected Uri doInBackground(Void... params) {
     HttpURLConnection connection = null;
 
     try {
@@ -60,8 +60,7 @@ class DownloadHelper extends AsyncTask <Void, Void, Bitmap> {
       InputStream in = connection.getInputStream();
 
       copyStream(in, out);
-      return BitmapFactory.decodeFile(file.getPath(),
-          CacheLayer.getImageOptions());
+      return Uri.fromFile(file);
     }
     catch (Exception e) {
       Log.e(TAG, e.toString());
@@ -76,9 +75,9 @@ class DownloadHelper extends AsyncTask <Void, Void, Bitmap> {
   }
 
   @Override
-  protected void onPostExecute(Bitmap image) {
-    if (image != null) {
-      imageView.setImageBitmap(image);
+  protected void onPostExecute(Uri uri) {
+    if (uri != null) {
+      imageView.setImage(ImageSource.uri(uri));
 
       for (String key : infoMap.keySet()) {
         String url = infoMap.get(key);
@@ -86,7 +85,7 @@ class DownloadHelper extends AsyncTask <Void, Void, Bitmap> {
         if (!key.equals(DataLayer.DEFAULT_FLOOR) &&
             !key.equals(DataLayer.NUM_FLOORS) &&
             !url.equals(imageUrl)) {
-          new CacheHelper().execute(url);
+          new CacheTask().execute(url);
         }
       }
     }
@@ -126,7 +125,7 @@ class DownloadHelper extends AsyncTask <Void, Void, Bitmap> {
     out.close();
   }
 
-  private class CacheHelper extends AsyncTask<String, Void, Void> {
+  private class CacheTask extends AsyncTask<String, Void, Void> {
     @Override
     protected Void doInBackground(String... params) {
       HttpURLConnection connection = null;
