@@ -6,6 +6,11 @@
   android:layout_height="match_parent"
   tools:context="edu.utexas.cs.bevomaps.BuildingActivity" >
 
+  <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+    android:id="@+id/building_image"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
   <View
     android:id="@+id/building_background"
     android:layout_width="match_parent"

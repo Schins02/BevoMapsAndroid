@@ -67,9 +67,12 @@ class CacheLayer implements Parcelable {
   }
 
   void loadImage(ImageHelper imageHelper, String building, String floor) {
-    String imageUrl = buildingMap.get(building).get(floor);
+    Map <String, String> buildingInfo = buildingMap.get(building);
+    Log.d(TAG, buildingInfo.toString());
+
+    String imageUrl = buildingInfo.get(floor);
     if (imageUrl == null) {
-      imageUrl = buildingMap.get(building).get(DataLayer.DEFAULT_FLOOR);
+      imageUrl = buildingInfo.get(buildingInfo.get(DataLayer.DEFAULT_FLOOR));
     }
 
     File cacheFile = new File(cacheDir, getImageName(imageUrl));
@@ -77,7 +80,7 @@ class CacheLayer implements Parcelable {
       imageHelper.setImage(Uri.fromFile(cacheFile));
     }
     else {
-      new ImageTask(cacheDir, imageHelper, buildingMap.get(building), imageUrl).execute();
+      new ImageTask(cacheDir, imageHelper, buildingInfo, imageUrl).execute();
     }
   }
 

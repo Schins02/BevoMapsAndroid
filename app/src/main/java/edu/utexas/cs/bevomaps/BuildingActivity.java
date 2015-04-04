@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 /**
  * BuildingActivity.java
@@ -18,9 +19,11 @@ public class BuildingActivity extends Activity {
 
   // Fields---------------------------------------------------------
 
+  private CacheLayer cacheLayer;
+  private ImageHelper imageHelper;
+
   private ABHelper abHelper;
   private BGHelper bgHelper;
-  private ImageHelper imageHelper;
 
   // Methods--------------------------------------------------------
 
@@ -30,6 +33,10 @@ public class BuildingActivity extends Activity {
     setContentView(R.layout.activity_building);
 
     Intent intent = getIntent();
+    cacheLayer = intent.getParcelableExtra("cache");
+    imageHelper= new ImageHelper((SubsamplingScaleImageView)findViewById(R.id.building_image));
+    cacheLayer.loadImage(imageHelper, intent.getStringExtra(SearchLayer.BUILDING),
+        intent.getStringExtra(SearchLayer.FLOOR));
 
     abHelper = new ABHelper(this);
     abHelper.setBackOnClickListener(new View.OnClickListener() {
