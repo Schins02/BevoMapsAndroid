@@ -3,6 +3,7 @@ package edu.utexas.cs.bevomaps;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ProgressBar;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,32 +19,38 @@ import java.util.Map;
  * Created by Eric on 3/29/15.
  */
 
-class ImageTask extends AsyncTask <Void, Void, Uri[]> {
+class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
 
   // Fields---------------------------------------------------------
 
   private static final String TAG = "** ImageTask **";
-  private static final int BUFFER_SIZE = 102400;   //100KB
+  private static final int BUFFER_SIZE = 102400; //100KB
 
   private final File cacheDir;
   private final ImageHelper imageHelper;
   private final Map<String, String> infoMap;
   private final String floor;
+  private final ProgressBar progressBar;
+
+  private static final long FADE_DURATION = 1000; //1s
 
   // Constructors---------------------------------------------------
 
-  ImageTask(ImageHelper imageHelper, Map<String, String> infoMap,
-            String floor, File cacheDir) {
+  ImageTask(ImageHelper imageHelper, ProgressBar progressBar,
+            Map<String, String> infoMap, String floor, File cacheDir) {
     this.cacheDir = cacheDir;
     this.imageHelper = imageHelper;
     this.infoMap = infoMap;
     this.floor = floor;
+    this.progressBar = progressBar;
   }
 
   // Methods--------------------------------------------------------
 
   @Override
   protected void onPreExecute() {
+    progressBar.setAlpha(1);
+    progressBar.setProgress(10);
     freeCache();
   }
 
@@ -60,6 +67,7 @@ class ImageTask extends AsyncTask <Void, Void, Uri[]> {
       InputStream in = connection.getInputStream();
 
       copyStream(in, out);
+      publishProgress(50);
 
       File previewCache = new File(cacheDir, CacheLayer.getImageName(previewUrl));
       out = new FileOutputStream(previewCache);
@@ -67,6 +75,7 @@ class ImageTask extends AsyncTask <Void, Void, Uri[]> {
       in = connection.getInputStream();
 
       copyStream(in, out);
+      publishProgress(80);
 
       return new Uri[]{Uri.fromFile(imageCache), Uri.fromFile(previewCache)};
     }
@@ -83,7 +92,15 @@ class ImageTask extends AsyncTask <Void, Void, Uri[]> {
   }
 
   @Override
+  protected void onProgressUpdate(Integer... values) {
+    progressBar.setProgress(values[0]);
+  }
+
+  @Override
   protected void onPostExecute(Uri[] uri) {
+    progressBar.setProgress(100);
+    progressBar.animate().alpha(0).setDuration(FADE_DURATION);
+
     if (uri != null) {
       imageHelper.setImage(uri[0], uri[1]);
 
@@ -130,8 +147,9 @@ class ImageTask extends AsyncTask <Void, Void, Uri[]> {
       out.write(buffer, 0, length);
     }
 
-    in.close();
+    out.flush();
     out.close();
+    in.close();
   }
 
   private class CacheTask extends AsyncTask<String, Void, Void> {

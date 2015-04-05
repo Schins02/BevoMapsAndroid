@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.widget.ProgressBar;
 import com.google.android.gms.maps.GoogleMap;
 import java.io.File;
 import java.util.HashMap;
@@ -72,7 +73,8 @@ class CacheLayer implements Parcelable {
     return buildingMap.containsKey(building);
   }
 
-  void loadImage(ImageHelper imageHelper, String building, String floor) {
+  void loadImage(ImageHelper imageHelper, ProgressBar progressBar,
+                 String building, String floor) {
     Map <String, String> infoMap = buildingMap.get(building);
     if (floor == null) {
       floor = infoMap.get(DataLayer.DEFAULT_FLOOR);
@@ -87,7 +89,7 @@ class CacheLayer implements Parcelable {
       imageHelper.setImage(Uri.fromFile(imageCache), Uri.fromFile(previewCache));
     }
     else {
-      new ImageTask(imageHelper, infoMap, floor, cacheDir).execute();
+      new ImageTask(imageHelper, progressBar, infoMap, floor, cacheDir).execute();
     }
   }
 

@@ -45,6 +45,15 @@
     android:textColor="@color/material_white"
     android:textSize="20sp" />
 
+  <ProgressBar
+    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+    android:id="@+id/ab_progress"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_alignParentBottom="true"
+    android:max="100"
+    android:progressDrawable="@drawable/progress" />
+
   <RelativeLayout
     android:id="@+id/ab_search_bar"
     android:layout_width="match_parent"

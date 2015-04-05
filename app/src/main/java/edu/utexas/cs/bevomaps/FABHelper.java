@@ -15,8 +15,8 @@ class FABHelper {
 
   private final FloatingActionButton button;
 
-  private static final float FADE_DISTANCE = 50;
-  private static final long FADE_DURATION = 100;
+  private static final float FADE_DISTANCE = 50; //50dp
+  private static final long FADE_DURATION = 100; //100ms
 
   // Constructors---------------------------------------------------
 

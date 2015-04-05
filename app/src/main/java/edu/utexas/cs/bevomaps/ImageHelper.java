@@ -25,12 +25,18 @@ class ImageHelper {
 
   // Methods--------------------------------------------------------
 
+  void reset() {
+
+  }
+
   void setImage(Uri imageUri, Uri previewUri) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inJustDecodeBounds = true;
     BitmapFactory.decodeFile(imageUri.getPath(), options);
 
-    ImageSource image = ImageSource.uri(imageUri).dimensions(options.outWidth, options.outHeight),
+    int width = options.outWidth, height = options.outHeight;
+
+    ImageSource image = ImageSource.uri(imageUri).dimensions(width, height),
         preview = ImageSource.uri(previewUri);
 
     view.setImage(image, preview);

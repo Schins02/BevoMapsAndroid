@@ -123,10 +123,10 @@ public class MapActivity extends Activity {
     String building = info.get(SearchLayer.BUILDING);
     if (building != null && cacheLayer.isBuilding(building)) {
       Intent intent = new Intent(this, BuildingActivity.class);
-      intent.putExtra("cache", cacheLayer);
-      intent.putExtra("name", "Gates Dell Complex");   //TODO Change
-      intent.putExtra(SearchLayer.BUILDING, building);
-      intent.putExtra(SearchLayer.FLOOR, info.get(SearchLayer.FLOOR));
+      intent.putExtra("cache", cacheLayer)
+            .putExtra("name", "Gates Dell Complex")
+            .putExtra(SearchLayer.BUILDING, building)
+            .putExtra(SearchLayer.FLOOR, info.get(SearchLayer.FLOOR));
       startActivity(intent);
     }
     else {
@@ -186,7 +186,6 @@ public class MapActivity extends Activity {
   public void onResume() {
     super.onResume();
     mapHelper.connect();
-
     if (textView.isCursorVisible()) {
       hideKeyboard();
     }

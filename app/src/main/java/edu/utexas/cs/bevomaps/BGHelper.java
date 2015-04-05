@@ -14,7 +14,7 @@ class BGHelper {
 
   private final View view;
 
-  private static final long FADE_DURATION = 250;
+  private static final long FADE_DURATION = 250; //250ms
 
   // Constructors---------------------------------------------------
 
