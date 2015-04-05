@@ -73,19 +73,21 @@ class CacheLayer implements Parcelable {
   }
 
   void loadImage(ImageHelper imageHelper, String building, String floor) {
-    Map <String, String> buildingInfo = buildingMap.get(building);
-
-    String imageUrl = buildingInfo.get(floor);
-    if (imageUrl == null) {
-      imageUrl = buildingInfo.get(buildingInfo.get(DataLayer.DEFAULT_FLOOR));
+    Map <String, String> infoMap = buildingMap.get(building);
+    if (floor == null) {
+      floor = infoMap.get(DataLayer.DEFAULT_FLOOR);
     }
 
-    File cacheFile = new File(cacheDir, getImageName(imageUrl));
-    if (cacheFile.isFile()) {
-      imageHelper.setImage(Uri.fromFile(cacheFile));
+    String imageUrl = infoMap.get(floor),
+        previewUrl = infoMap.get(floor + DataLayer.PREVIEW_POSTFIX);
+    File imageCache = new File(cacheDir, getImageName(imageUrl)),
+        previewCache = new File(cacheDir, getImageName(previewUrl));
+
+    if (imageCache.isFile() && previewCache.isFile()) {
+      imageHelper.setImage(Uri.fromFile(imageCache), Uri.fromFile(previewCache));
     }
     else {
-      new ImageTask(cacheDir, imageHelper, buildingInfo, imageUrl).execute();
+      new ImageTask(imageHelper, infoMap, floor, cacheDir).execute();
     }
   }
 

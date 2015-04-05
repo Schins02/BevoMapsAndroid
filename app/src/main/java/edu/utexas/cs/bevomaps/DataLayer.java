@@ -19,7 +19,9 @@ import java.util.Map;
 class DataLayer {
 
     private static final String TAG = "** DataLayer **";
-    static final String DEFAULT_FLOOR = "defaultFloor", NUM_FLOORS = "numFloors";
+    static final String DEFAULT_FLOOR = "defaultFloor",
+                        NUM_FLOORS = "numFloors",
+                        PREVIEW_POSTFIX = "p";
 
     /**
      * Method to get HashMap of HashMaps containing data for each building

@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by Eric on 3/29/15.
  */
 
-class ImageTask extends AsyncTask <Void, Void, Uri> {
+class ImageTask extends AsyncTask <Void, Void, Uri[]> {
 
   // Fields---------------------------------------------------------
 
@@ -28,16 +28,16 @@ class ImageTask extends AsyncTask <Void, Void, Uri> {
   private final File cacheDir;
   private final ImageHelper imageHelper;
   private final Map<String, String> infoMap;
-  private final String imageUrl;
+  private final String floor;
 
   // Constructors---------------------------------------------------
 
-  ImageTask(File cacheDir, ImageHelper imageHelper,
-            Map<String, String> infoMap, String imageUrl) {
+  ImageTask(ImageHelper imageHelper, Map<String, String> infoMap,
+            String floor, File cacheDir) {
     this.cacheDir = cacheDir;
     this.imageHelper = imageHelper;
     this.infoMap = infoMap;
-    this.imageUrl = imageUrl;
+    this.floor = floor;
   }
 
   // Methods--------------------------------------------------------
@@ -48,17 +48,27 @@ class ImageTask extends AsyncTask <Void, Void, Uri> {
   }
 
   @Override
-  protected Uri doInBackground(Void... params) {
+  protected Uri[] doInBackground(Void... params) {
+    String imageUrl = infoMap.get(floor),
+        previewUrl = infoMap.get(floor + DataLayer.PREVIEW_POSTFIX);
     HttpURLConnection connection = null;
 
     try {
-      File file = new File(cacheDir, CacheLayer.getImageName(imageUrl));
-      FileOutputStream out = new FileOutputStream(file);
+      File imageCache = new File(cacheDir, CacheLayer.getImageName(imageUrl));
+      FileOutputStream out = new FileOutputStream(imageCache);
       connection = (HttpURLConnection)new URL(imageUrl).openConnection();
       InputStream in = connection.getInputStream();
 
       copyStream(in, out);
-      return Uri.fromFile(file);
+
+      File previewCache = new File(cacheDir, CacheLayer.getImageName(previewUrl));
+      out = new FileOutputStream(previewCache);
+      connection = (HttpURLConnection)new URL(previewUrl).openConnection();
+      in = connection.getInputStream();
+
+      copyStream(in, out);
+
+      return new Uri[]{Uri.fromFile(imageCache), Uri.fromFile(previewCache)};
     }
     catch (Exception e) {
       Log.e(TAG, e.toString());
@@ -73,16 +83,17 @@ class ImageTask extends AsyncTask <Void, Void, Uri> {
   }
 
   @Override
-  protected void onPostExecute(Uri uri) {
+  protected void onPostExecute(Uri[] uri) {
     if (uri != null) {
-      imageHelper.setImage(uri);
+      imageHelper.setImage(uri[0], uri[1]);
 
       for (String key : infoMap.keySet()) {
         String url = infoMap.get(key);
 
         if (!key.equals(DataLayer.DEFAULT_FLOOR) &&
             !key.equals(DataLayer.NUM_FLOORS) &&
-            !url.equals(imageUrl)) {
+            !key.equals(floor) &&
+            !key.equals(floor + DataLayer.PREVIEW_POSTFIX)) {
           new CacheTask().execute(url);
         }
       }
