@@ -9,8 +9,12 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.widget.ProgressBar;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,6 +32,7 @@ class CacheLayer implements Parcelable {
 
   private final File cacheDir;
   private HashMap<String, HashMap<String, String>> buildingMap;
+  private HashMap<String, HashMap<String, String>> markerMap;
   private HashMap<String, String> searchMap;
 
   public static final Creator<CacheLayer> CREATOR = new Creator<CacheLayer>() {
@@ -50,11 +55,28 @@ class CacheLayer implements Parcelable {
       Log.d(TAG, "Creating image cache.");
     }
 
-    new BuildingHelper().execute();
+    new BuildingTask().execute();
     new SearchHelper().execute();
   }
 
   // Methods--------------------------------------------------------
+
+  void clearCache() {
+    for (File file : cacheDir.listFiles()) {
+      if (!file.delete()) {
+        Log.d(TAG, file.getName() + " cannot be deleted.");
+      }
+    }
+  }
+
+  String getBuildingName(String shortName) {
+    if (markerMap == null) {
+      Log.d(TAG, "Marker list not loaded.");
+      return null;
+    }
+
+    return markerMap.get(shortName).get(DataLayer.LONG_NAME);
+  }
 
   Map<String, String> getSearchMap() {
     if (searchMap == null) {
@@ -123,7 +145,7 @@ class CacheLayer implements Parcelable {
     return 0;
   }
 
-  private class BuildingHelper
+  private class BuildingTask
       extends AsyncTask<Void, Void, HashMap<String, HashMap<String, String>>> {
     @Override
     protected HashMap<String, HashMap<String, String>> doInBackground(Void... params) {
@@ -146,6 +168,31 @@ class CacheLayer implements Parcelable {
     @Override
     protected void onPostExecute(HashMap<String, String> map) {
       searchMap = map;
+    }
+  }
+
+  private class MarkerTask
+      extends AsyncTask<Void, Void, List<Map<String, String>>> {
+    private final GoogleMap map;
+    MarkerTask(GoogleMap map) {
+      this.map = map;
+    }
+
+    @Override
+    protected List<Map<String, String>> doInBackground(Void... params) {
+      return DataLayer.getMarkerList();
+    }
+
+    @Override
+    protected void onPostExecute(List<Map<String, String>> list) {
+      for (Map<String, String> infoMap : list) {
+
+
+        map.addMarker(new MarkerOptions()
+            .position(new LatLng(Double.parseDouble(infoMap.get("latitude")),
+                Double.parseDouble(infoMap.get("longitude"))))
+            .title(infoMap.get("longName")));
+      }
     }
   }
 }

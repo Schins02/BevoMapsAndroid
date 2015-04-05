@@ -21,7 +21,7 @@ class ABHelper {
   private final TextView title;
   private final View bar;
 
-  private static final long BAR_DURATION = 200; //200ms
+  private static final long BAR_DURATION = 100; //100ms
 
   // Constructors---------------------------------------------------
 

@@ -32,7 +32,7 @@ class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
   private final String floor;
   private final ProgressBar progressBar;
 
-  private static final long FADE_DURATION = 1000; //1s
+  private static final long FADE_DURATION = 500; //500ms
 
   // Constructors---------------------------------------------------
 

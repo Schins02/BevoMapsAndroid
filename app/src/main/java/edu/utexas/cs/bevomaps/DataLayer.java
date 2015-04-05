@@ -21,7 +21,12 @@ class DataLayer {
     private static final String TAG = "** DataLayer **";
     static final String DEFAULT_FLOOR = "defaultFloor",
                         NUM_FLOORS = "numFloors",
-                        PREVIEW_POSTFIX = "p";
+                        PREVIEW_POSTFIX = "p",
+
+                        LATITUDE = "latitude",
+                        LONGITUDE = "longitude",
+                        LONG_NAME = "longName",
+                        THUMBNAIL = "thumbnail";
 
     /**
      * Method to get HashMap of HashMaps containing data for each building

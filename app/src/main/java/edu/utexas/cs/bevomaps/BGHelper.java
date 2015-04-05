@@ -13,8 +13,7 @@ class BGHelper {
   // Fields---------------------------------------------------------
 
   private final View view;
-
-  private static final long FADE_DURATION = 250; //250ms
+  private static final long FADE_DURATION = 200; //200ms
 
   // Constructors---------------------------------------------------
 

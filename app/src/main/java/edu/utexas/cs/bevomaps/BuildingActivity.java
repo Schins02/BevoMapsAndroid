@@ -96,7 +96,6 @@ public class BuildingActivity extends Activity {
   private void prepareForSegue(Map<String, String> info) {
     String building = info.get(SearchLayer.BUILDING);
     if (building != null && cacheLayer.isBuilding(building)) {
-      imageHelper.reset();
       cacheLayer.loadImage(imageHelper, progressBar, building, info.get(SearchLayer.FLOOR));
     }
     else {
@@ -108,6 +107,7 @@ public class BuildingActivity extends Activity {
     abHelper.expand();
     bgHelper.fadeIn();
 
+    abHelper.getEditText().requestFocus();
     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     imm.showSoftInput(abHelper.getEditText(), 0);
   }
