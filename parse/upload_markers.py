@@ -1,5 +1,4 @@
-
-import os, json, httplib, copy
+import os, json, httplib, copy  
 
 # connect to Parse ------------------------------------------------------------
 
@@ -8,14 +7,11 @@ connection.connect()
 
 # iterate through files in dir and upload to parse ----------------------------
 # format: file name => building => GDC.txt ------------------------------------
-# text in file => floor_URL => 1_www.imageURL.com -----------------------------
 
+# set up dictionary and list to build json ------------------------------------
 
-# set up dictionary to build json ---------------------------------------------
-
-url_data = {}
-url_data["pk"] = "jsonObj"
-url_data["Buildings"] = {}
+marker_dict = {}
+marker_list = []
 marker_list_fields = ["shortName", "longName", "latitude", "longitude", "thumbnail"]
 
 # iterate through files in current dir and load json --------------------------
@@ -24,26 +20,24 @@ for root, dirs, files, in os.walk(os.getcwd()) :
 	for name in files : 
 		if(name.endswith(".txt")):
 
-			number_of_floors = 0
-			building_name = name[0:-4]
-			url_data["Buildings"][building_name] = {}
 
+			marker_dictionary = {}
 			file = open(name)
 			for line in iter(file) :
 
 				floor_and_url = line.split("_")
-				if floor_and_url[0] not in marker_list_fields :
-					url_data["Buildings"][building_name][floor_and_url[0]] = floor_and_url[1][0:-1]
-					number_of_floors += 1
+				if floor_and_url[0] in marker_list_fields :
+					marker_dictionary[floor_and_url[0]] = floor_and_url[1][0:-1]
 
-			#number of floors - 1 because one line for default_floor 
-			url_data["Buildings"][building_name]["numFloors"] = str(number_of_floors - 1)
+			marker_list.append(marker_dictionary)
 
-print url_data
 
-# POST data to BuildingJSON table --------------------------------------------- 
+marker_dict["Markers"] = marker_list
+print marker_dict
 
-connection.request('POST', '/1/classes/BuildingJSON', json.dumps(url_data), {
+# update column in BuildingJSON table vie PUT ---------------------------------- 
+
+connection.request('PUT', '/1/classes/BuildingJSON/R0wwg7vGHb', json.dumps(marker_dict), {
  	"X-Parse-Application-Id": "xTzPEGb9UXNKHH6lEphikPyDpfXeSinJ9HoIqODU",
    	"X-Parse-REST-API-Key": "7LO1Je4sQxoSEWaWkKvssV12LbBHhnhoB1T4vUn6",
    	"Content-Type": "application/json"
