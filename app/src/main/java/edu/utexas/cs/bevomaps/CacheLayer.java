@@ -30,7 +30,6 @@ class CacheLayer implements Parcelable {
   private HashMap<String, HashMap<String, String>> buildingMap;
   private HashMap<String, String> searchMap;
 
-  private static final String TAG = CacheLayer.class.getSimpleName();
   public static final Creator<CacheLayer> CREATOR = new Creator<CacheLayer>() {
     @Override
     public CacheLayer createFromParcel(Parcel in) {
@@ -42,6 +41,7 @@ class CacheLayer implements Parcelable {
       return new CacheLayer[size];
     }
   };
+  private static final String TAG = CacheLayer.class.getSimpleName();
 
   // Constructors---------------------------------------------------
 

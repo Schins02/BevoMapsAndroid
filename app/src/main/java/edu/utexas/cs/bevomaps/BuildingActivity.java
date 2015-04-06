@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 /**
  * BuildingActivity.java
- * <p/>
+ *
  * Created by Eric on 3/28/15.
  */
 
@@ -31,6 +32,8 @@ public class BuildingActivity extends Activity {
   private BGHelper bgHelper;
 
   private ProgressBar progressBar;
+
+  private static final String TAG = BuildingActivity.class.getSimpleName();
 
   // Methods--------------------------------------------------------
 
@@ -119,5 +122,10 @@ public class BuildingActivity extends Activity {
 
     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     imm.hideSoftInputFromWindow(abHelper.getEditText().getWindowToken(), 0);
+  }
+
+  @Override
+  public void onLowMemory() {
+    Log.d(TAG, "Low memory warning.");
   }
 }

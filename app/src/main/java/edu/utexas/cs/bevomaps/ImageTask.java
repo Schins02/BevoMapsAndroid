@@ -23,7 +23,6 @@ class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
 
   // Fields---------------------------------------------------------
 
-  private static final String TAG = ImageTask.class.getSimpleName();
   private static final int BUFFER_SIZE = 102400; //100KB
 
   private final File cacheDir;
@@ -33,6 +32,7 @@ class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
   private final ProgressBar progressBar;
 
   private static final long FADE_DURATION = 500; //500ms
+  private static final String TAG = ImageTask.class.getSimpleName();
 
   // Constructors---------------------------------------------------
 

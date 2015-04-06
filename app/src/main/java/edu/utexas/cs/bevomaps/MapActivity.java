@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,7 +29,7 @@ import java.util.Map;
 
 /**
  * MapActivity.java
- * <p/>
+ *
  * Created by Eric on 3/28/15.
  */
 
@@ -43,6 +44,8 @@ public class MapActivity extends Activity {
   private MapHelper mapHelper;
 
   private EditText textView;
+
+  private static final String TAG = MapActivity.class.getSimpleName();
 
   // Methods--------------------------------------------------------
 
@@ -192,5 +195,10 @@ public class MapActivity extends Activity {
     else {
       mapHelper.redraw();
     }
+  }
+
+  @Override
+  public void onLowMemory() {
+    Log.d(TAG, "Low memory warning.");
   }
 }

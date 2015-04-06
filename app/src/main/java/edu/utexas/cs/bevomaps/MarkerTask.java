@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * MarkerTask.java
- * <p/>
+ *
  * Created by Eric on 4/3/15.
  */
 
