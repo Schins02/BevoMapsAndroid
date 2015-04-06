@@ -93,7 +93,7 @@ public class BuildingActivity extends Activity {
 
         String[] floors = new String[7];
         for(int i = 0; i < floors.length; i++)
-            floors[i] = String.valueOf(i);
+            floors[i] = String.valueOf(i + 1);
 
         ListView listView = (ListView) findViewById(R.id.floating_list);
         floorSelectorAdapter = new FloorSelectorAdapter(this, floors, listView);
