@@ -32,20 +32,33 @@ class SearchLayer {
     }
 
     Map<String, String> result = new TreeMap<>();
-
-    // Find building name in the search string
-    Pattern pattern = Pattern.compile("([a-zA-Z]{3})");
-    Matcher match = pattern.matcher(s);
     String building = null;
     String floor = null;
 
-    if(match.find()){
-      building = match.group(1).toUpperCase();
+    //Re split the string in case anything changed
+    strings = s.split("\\s+");
+
+    //Check the strings array for a building name "ABC"
+    for(String t: strings){
+        if(t.length() == 3 && t.matches("[a-zA-Z]{3}")){
+            building = t.toUpperCase();
+            break;
+        }
     }
+
+//    // Find building name in the search string
+//    Pattern pattern = Pattern.compile("([a-zA-Z]{3})");
+//    Matcher match = pattern.matcher(s);
+//    String building = null;
+//    String floor = null;
+//
+//    if(match.find()){
+//      building = match.group(1).toUpperCase();
+//    }
 
     // Find the floor in the string string
     Pattern roomPattern = Pattern.compile("(\\d\\.\\d*)");
-    match = roomPattern.matcher(s);
+    Matcher match = roomPattern.matcher(s);
     if(match.find()){
       floor = match.group(1);
       floor = Character.toString(floor.charAt(0));
