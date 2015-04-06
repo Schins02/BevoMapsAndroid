@@ -37,7 +37,7 @@ print marker_dict
 
 # update column in BuildingJSON table vie PUT ---------------------------------- 
 
-connection.request('PUT', '/1/classes/BuildingJSON/R0wwg7vGHb', json.dumps(marker_dict), {
+connection.request('PUT', '/1/classes/BuildingJSON/HfJpkmc3Hh', json.dumps(marker_dict), {
  	"X-Parse-Application-Id": "xTzPEGb9UXNKHH6lEphikPyDpfXeSinJ9HoIqODU",
    	"X-Parse-REST-API-Key": "7LO1Je4sQxoSEWaWkKvssV12LbBHhnhoB1T4vUn6",
    	"Content-Type": "application/json"

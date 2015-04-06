@@ -37,7 +37,7 @@ for root, dirs, files, in os.walk(os.getcwd()) :
 					number_of_floors += 1
 
 			#number of floors - 1 because one line for default_floor 
-			url_data["Buildings"][building_name]["numFloors"] = str(number_of_floors - 1)
+			url_data["Buildings"][building_name]["numFloors"] = str((number_of_floors - 1) / 2)
 
 print url_data
 
