@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,27 +26,31 @@ public class BuildingActivity extends Activity {
   // Fields---------------------------------------------------------
 
   private CacheLayer cacheLayer;
-  private ImageHelper imageHelper;
 
   private ABHelper abHelper;
   private BGHelper bgHelper;
+  private ImageHelper imageHelper;
 
   private ProgressBar progressBar;
-
-  private static final String TAG = BuildingActivity.class.getSimpleName();
 
   // Methods--------------------------------------------------------
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  protected void onCreate(Bundle in) {
+    super.onCreate(in);
     setContentView(R.layout.activity_building);
 
     Intent intent = getIntent();
     cacheLayer = intent.getParcelableExtra("cache");
-    imageHelper = new ImageHelper((SubsamplingScaleImageView) findViewById(R.id.building_image));
+
+    String text = "";
+    if (in != null) {
+      text = in.getString("searchText");
+    }
 
     abHelper = new ABHelper(this);
+    abHelper.setTitle(intent.getStringExtra("name"));
+    abHelper.getEditText().setText(text);
     abHelper.setBackOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -69,7 +73,6 @@ public class BuildingActivity extends Activity {
         return true;
       }
     });
-    abHelper.setTitle(intent.getStringExtra("name"));
     bgHelper = new BGHelper(findViewById(R.id.building_background));
     bgHelper.setOnTouchListener(new View.OnTouchListener() {
       @Override
@@ -81,19 +84,17 @@ public class BuildingActivity extends Activity {
         return false;
       }
     });
+    imageHelper = new ImageHelper((SubsamplingScaleImageView)findViewById(R.id.building_image));
 
     progressBar = (ProgressBar)findViewById(R.id.ab_progress);
 
-    cacheLayer.loadImage(imageHelper, progressBar, intent.getStringExtra(SearchLayer.BUILDING),
-        intent.getStringExtra(SearchLayer.FLOOR));
+    cacheLayer.loadImage(imageHelper, progressBar,
+        intent.getStringExtra(SearchLayer.BUILDING), intent.getStringExtra(SearchLayer.FLOOR));
   }
 
   @Override
-  public void onResume() {
-    super.onResume();
-    if (abHelper.isSearchVisible()) {
-      hideKeyboard();
-    }
+  protected void onSaveInstanceState(@NonNull Bundle out) {
+    out.putString("searchText", abHelper.getEditText().getText().toString());
   }
 
   private void prepareForSegue(Map<String, String> info) {
@@ -125,7 +126,10 @@ public class BuildingActivity extends Activity {
   }
 
   @Override
-  public void onLowMemory() {
-    Log.d(TAG, "Low memory warning.");
+  public void onResume() {
+    super.onResume();
+    if (abHelper.isSearchVisible()) {
+      hideKeyboard();
+    }
   }
 }

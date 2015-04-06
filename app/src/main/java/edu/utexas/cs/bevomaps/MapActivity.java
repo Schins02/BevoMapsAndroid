@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,8 +44,6 @@ public class MapActivity extends Activity {
 
   private EditText textView;
 
-  private static final String TAG = MapActivity.class.getSimpleName();
-
   // Methods--------------------------------------------------------
 
   @Override
@@ -57,7 +54,17 @@ public class MapActivity extends Activity {
     configParse();
     configStatusBar();
 
-    cacheLayer = new CacheLayer(this);
+
+    CameraPosition position = null;
+    String text = "";
+    if (in != null) {
+      cacheLayer = in.getParcelable("cacheLayer");
+      position = in.getParcelable("cameraPosition");
+      text = in.getString("searchText");
+    }
+    else {
+      cacheLayer = new CacheLayer(this);
+    }
 
     bgHelper = new BGHelper(findViewById(R.id.map_background));
     bgHelper.setOnTouchListener(new View.OnTouchListener() {
@@ -73,8 +80,7 @@ public class MapActivity extends Activity {
       }
     });
     mapHelper = new MapHelper(this,
-        (MapFragment) getFragmentManager().findFragmentById(R.id.map_map),
-        in != null ? (CameraPosition) in.getParcelable("cameraPosition") : null, cacheLayer);
+        (MapFragment) getFragmentManager().findFragmentById(R.id.map_map), position, cacheLayer);
     fabHelper = new FABHelper((FloatingActionButton) findViewById(R.id.map_location));
     fabHelper.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -84,7 +90,7 @@ public class MapActivity extends Activity {
     });
 
     textView = (EditText) findViewById(R.id.fsb_text);
-    textView.setText(in != null ? in.getString("searchText") : "");
+    textView.setText(text);
     textView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -118,6 +124,7 @@ public class MapActivity extends Activity {
 
   @Override
   protected void onSaveInstanceState(@NonNull Bundle out) {
+    out.putParcelable("cacheLayer", cacheLayer);
     out.putParcelable("cameraPosition", mapHelper.getCameraPosition());
     out.putString("searchText", textView.getText().toString());
   }
@@ -195,10 +202,5 @@ public class MapActivity extends Activity {
     else {
       mapHelper.redraw();
     }
-  }
-
-  @Override
-  public void onLowMemory() {
-    Log.d(TAG, "Low memory warning.");
   }
 }

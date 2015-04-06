@@ -67,7 +67,7 @@ class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
       InputStream in = connection.getInputStream();
 
       copyStream(in, out);
-      publishProgress(50);
+      publishProgress(40);
 
       File previewCache = new File(cacheDir, CacheLayer.getImageName(previewUrl));
       out = new FileOutputStream(previewCache);
@@ -75,7 +75,7 @@ class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
       in = connection.getInputStream();
 
       copyStream(in, out);
-      publishProgress(80);
+      publishProgress(70);
 
       return new Uri[]{Uri.fromFile(imageCache), Uri.fromFile(previewCache)};
     }
@@ -105,13 +105,11 @@ class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
       imageHelper.setImage(uri[0], uri[1]);
 
       for (String key : infoMap.keySet()) {
-        String url = infoMap.get(key);
-
         if (!key.equals(DataLayer.DEFAULT_FLOOR) &&
             !key.equals(DataLayer.NUM_FLOORS) &&
             !key.equals(floor) &&
             !key.equals(floor + DataLayer.PREVIEW_POSTFIX)) {
-          new CacheTask().execute(url);
+          new CacheTask().execute(infoMap.get(key));
         }
       }
     }
@@ -124,6 +122,7 @@ class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
       length += file.length();
     }
 
+    StringBuilder builder = new StringBuilder("Deleted:  ");
     while (length > CacheLayer.CACHE_SIZE) {
       int oldest = 0;
       for (int i = 1; i < files.length; i++) {
@@ -135,8 +134,11 @@ class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
       long deleted = files[oldest].length();
       if (files[oldest].delete()) {
         length -= deleted;
+        builder.append(files[oldest].getName()).append(", ");
       }
     }
+
+    Log.d(TAG, builder.substring(0, builder.length() - 2));
   }
 
   private static void copyStream(InputStream in, OutputStream out)

@@ -58,12 +58,43 @@ class CacheLayer implements Parcelable {
 
   // Methods--------------------------------------------------------
 
+  void loadImage(ImageHelper imageHelper, ProgressBar progressBar,
+                 String building, String floor) {
+    Map <String, String> infoMap = buildingMap.get(building);
+    if (floor == null) {
+      floor = infoMap.get(DataLayer.DEFAULT_FLOOR);
+    }
+
+    String imageUrl = infoMap.get(floor),
+        previewUrl = infoMap.get(floor + DataLayer.PREVIEW_POSTFIX);
+    File imageCache = new File(cacheDir, getImageName(imageUrl)),
+        previewCache = new File(cacheDir, getImageName(previewUrl));
+
+    if (imageCache.isFile() && previewCache.isFile()) {
+      imageHelper.setImage(Uri.fromFile(imageCache), Uri.fromFile(previewCache));
+    }
+    else {
+      new ImageTask(imageHelper, progressBar, infoMap, floor, cacheDir).execute();
+    }
+  }
+
+  void loadMarkers(GoogleMap map) {
+    new MarkerTask(markerMap, map).execute();
+  }
+
   void clearCache() {
+    StringBuilder builder = new StringBuilder("Deleted:  ");
     for (File file : cacheDir.listFiles()) {
-      if (!file.delete()) {
-        Log.d(TAG, file.getName() + " cannot be deleted.");
+      String name = file.getName();
+      if (file.delete()) {
+        builder.append(name).append(", ");
+      }
+      else {
+        Log.d(TAG, name + " cannot be deleted.");
       }
     }
+
+    Log.d(TAG, builder.substring(0, builder.length() - 2));
   }
 
   String getBuildingName(String building) {
@@ -92,32 +123,8 @@ class CacheLayer implements Parcelable {
     return buildingMap.containsKey(building);
   }
 
-  void loadImage(ImageHelper imageHelper, ProgressBar progressBar,
-                 String building, String floor) {
-    Map <String, String> infoMap = buildingMap.get(building);
-    if (floor == null) {
-      floor = infoMap.get(DataLayer.DEFAULT_FLOOR);
-    }
-
-    String imageUrl = infoMap.get(floor),
-        previewUrl = infoMap.get(floor + DataLayer.PREVIEW_POSTFIX);
-    File imageCache = new File(cacheDir, getImageName(imageUrl)),
-        previewCache = new File(cacheDir, getImageName(previewUrl));
-
-    if (imageCache.isFile() && previewCache.isFile()) {
-      imageHelper.setImage(Uri.fromFile(imageCache), Uri.fromFile(previewCache));
-    }
-    else {
-      new ImageTask(imageHelper, progressBar, infoMap, floor, cacheDir).execute();
-    }
-  }
-
   static String getImageName(String url) {
     return url.substring(url.lastIndexOf('/'));
-  }
-
-  void loadMarkers(GoogleMap map) {
-    new MarkerTask(markerMap, map).execute();
   }
 
   @SuppressWarnings("unchecked")
