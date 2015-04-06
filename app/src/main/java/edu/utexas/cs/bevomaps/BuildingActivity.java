@@ -96,6 +96,7 @@ public class BuildingActivity extends Activity {
   private void prepareForSegue(Map<String, String> info) {
     String building = info.get(SearchLayer.BUILDING);
     if (building != null && cacheLayer.isBuilding(building)) {
+      abHelper.setTitle(cacheLayer.getBuildingName(building));
       cacheLayer.loadImage(imageHelper, progressBar, building, info.get(SearchLayer.FLOOR));
     }
     else {

@@ -124,7 +124,7 @@ public class MapActivity extends Activity {
     if (building != null && cacheLayer.isBuilding(building)) {
       Intent intent = new Intent(this, BuildingActivity.class);
       intent.putExtra("cache", cacheLayer)
-            .putExtra("name", "Gates Dell Complex")
+            .putExtra("name", cacheLayer.getBuildingName(building))
             .putExtra(SearchLayer.BUILDING, building)
             .putExtra(SearchLayer.FLOOR, info.get(SearchLayer.FLOOR));
       startActivity(intent);
@@ -188,6 +188,9 @@ public class MapActivity extends Activity {
     mapHelper.connect();
     if (textView.isCursorVisible()) {
       hideKeyboard();
+    }
+    else {
+      mapHelper.redraw();
     }
   }
 }

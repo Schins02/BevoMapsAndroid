@@ -104,7 +104,7 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
     marker.setPosition(position);
 
     if (following) {
-      map.animateCamera(CameraUpdateFactory.newLatLng(position));
+      map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, ZOOM));
     }
   }
 
@@ -135,6 +135,10 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
     if (following) {
       setLocation();
     }
+  }
+
+  void setOnMarkerClickListener(GoogleMap.OnMarkerClickListener listener) {
+    map.setOnMarkerClickListener(listener);
   }
 
   private void setLocation() {

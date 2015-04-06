@@ -9,12 +9,8 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.widget.ProgressBar;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,14 +23,14 @@ class CacheLayer implements Parcelable {
 
   // Fields---------------------------------------------------------
 
-  private static final String TAG = "CacheLayer";
   static final long CACHE_SIZE = 10485760; //10MB
 
   private final File cacheDir;
+  private final HashMap<String, HashMap<String, String>> markerMap;
   private HashMap<String, HashMap<String, String>> buildingMap;
-  private HashMap<String, HashMap<String, String>> markerMap;
   private HashMap<String, String> searchMap;
 
+  private static final String TAG = CacheLayer.class.getSimpleName();
   public static final Creator<CacheLayer> CREATOR = new Creator<CacheLayer>() {
     @Override
     public CacheLayer createFromParcel(Parcel in) {
@@ -55,8 +51,9 @@ class CacheLayer implements Parcelable {
       Log.d(TAG, "Creating image cache.");
     }
 
+    markerMap = new HashMap<>();
     new BuildingTask().execute();
-    new SearchHelper().execute();
+    new SearchTask().execute();
   }
 
   // Methods--------------------------------------------------------
@@ -69,13 +66,13 @@ class CacheLayer implements Parcelable {
     }
   }
 
-  String getBuildingName(String shortName) {
+  String getBuildingName(String building) {
     if (markerMap == null) {
       Log.d(TAG, "Marker list not loaded.");
-      return null;
+      return building;
     }
 
-    return markerMap.get(shortName).get(DataLayer.LONG_NAME);
+    return markerMap.get(building).get(DataLayer.LONG_NAME);
   }
 
   Map<String, String> getSearchMap() {
@@ -120,13 +117,14 @@ class CacheLayer implements Parcelable {
   }
 
   void loadMarkers(GoogleMap map) {
-    new MarkerTask(map).execute();
+    new MarkerTask(markerMap, map).execute();
   }
 
   @SuppressWarnings("unchecked")
   private CacheLayer (Parcel in) {
     Bundle bundle = in.readBundle();
     cacheDir = (File)bundle.getSerializable("cacheDir");
+    markerMap = (HashMap<String, HashMap<String, String>>)bundle.getSerializable("markerMap");
     buildingMap = (HashMap<String, HashMap<String, String>>)bundle.getSerializable("buildingMap");
     searchMap = (HashMap<String, String>)bundle.getSerializable("searchMap");
   }
@@ -135,6 +133,7 @@ class CacheLayer implements Parcelable {
   public void writeToParcel(Parcel out, int flags) {
     Bundle bundle = new Bundle();
     bundle.putSerializable("cacheDir", cacheDir);
+    bundle.putSerializable("markerMap", markerMap);
     bundle.putSerializable("buildingMap", buildingMap);
     bundle.putSerializable("searchMap", searchMap);
     out.writeBundle(bundle);
@@ -158,7 +157,7 @@ class CacheLayer implements Parcelable {
     }
   }
 
-  private class SearchHelper
+  private class SearchTask
       extends AsyncTask<Void, Void, HashMap<String, String>> {
     @Override
     protected HashMap<String, String> doInBackground(Void... params) {
@@ -168,31 +167,6 @@ class CacheLayer implements Parcelable {
     @Override
     protected void onPostExecute(HashMap<String, String> map) {
       searchMap = map;
-    }
-  }
-
-  private class MarkerTask
-      extends AsyncTask<Void, Void, List<Map<String, String>>> {
-    private final GoogleMap map;
-    MarkerTask(GoogleMap map) {
-      this.map = map;
-    }
-
-    @Override
-    protected List<Map<String, String>> doInBackground(Void... params) {
-      return DataLayer.getMarkerList();
-    }
-
-    @Override
-    protected void onPostExecute(List<Map<String, String>> list) {
-      for (Map<String, String> infoMap : list) {
-
-
-        map.addMarker(new MarkerOptions()
-            .position(new LatLng(Double.parseDouble(infoMap.get("latitude")),
-                Double.parseDouble(infoMap.get("longitude"))))
-            .title(infoMap.get("longName")));
-      }
     }
   }
 }
