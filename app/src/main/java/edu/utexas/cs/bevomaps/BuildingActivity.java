@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,109 +24,119 @@ import java.util.Map;
 
 public class BuildingActivity extends Activity {
 
-  // Fields---------------------------------------------------------
+    // Fields---------------------------------------------------------
 
-  private CacheLayer cacheLayer;
-  private ImageHelper imageHelper;
+    private CacheLayer cacheLayer;
+    private ImageHelper imageHelper;
 
-  private ABHelper abHelper;
-  private BGHelper bgHelper;
+    private ABHelper abHelper;
+    private BGHelper bgHelper;
 
-  private ProgressBar progressBar;
+    private ProgressBar progressBar;
 
-  private static final String TAG = BuildingActivity.class.getSimpleName();
+    private FloorSelectorAdapter floorSelectorAdapter;
 
-  // Methods--------------------------------------------------------
+    private static final String TAG = BuildingActivity.class.getSimpleName();
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_building);
+    // Methods--------------------------------------------------------
 
-    Intent intent = getIntent();
-    cacheLayer = intent.getParcelableExtra("cache");
-    imageHelper = new ImageHelper((SubsamplingScaleImageView) findViewById(R.id.building_image));
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_building);
 
-    abHelper = new ABHelper(this);
-    abHelper.setBackOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        hideKeyboard();
-        finish();
-      }
-    });
-    abHelper.setSearchOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        showKeyboard();
-      }
-    });
-    abHelper.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-      @Override
-      public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        hideKeyboard();
-        prepareForSegue(SearchLayer.parseInputText(cacheLayer,
-            abHelper.getEditText().getText().toString()));
-        return true;
-      }
-    });
-    abHelper.setTitle(intent.getStringExtra("name"));
-    bgHelper = new BGHelper(findViewById(R.id.building_background));
-    bgHelper.setOnTouchListener(new View.OnTouchListener() {
-      @Override
-      public boolean onTouch(View v, MotionEvent event) {
+        Intent intent = getIntent();
+        cacheLayer = intent.getParcelableExtra("cache");
+        imageHelper = new ImageHelper((SubsamplingScaleImageView) findViewById(R.id.building_image));
+
+        abHelper = new ABHelper(this);
+        abHelper.setBackOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideKeyboard();
+                finish();
+            }
+        });
+        abHelper.setSearchOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showKeyboard();
+            }
+        });
+        abHelper.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                hideKeyboard();
+                prepareForSegue(SearchLayer.parseInputText(cacheLayer,
+                        abHelper.getEditText().getText().toString()));
+                return true;
+            }
+        });
+        abHelper.setTitle(intent.getStringExtra("name"));
+        bgHelper = new BGHelper(findViewById(R.id.building_background));
+        bgHelper.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (abHelper.isSearchVisible()) {
+                    hideKeyboard();
+                }
+
+                return false;
+            }
+        });
+
+        progressBar = (ProgressBar) findViewById(R.id.ab_progress);
+
+        cacheLayer.loadImage(imageHelper, progressBar, intent.getStringExtra(SearchLayer.BUILDING),
+                intent.getStringExtra(SearchLayer.FLOOR));
+
+
+        String[] floors = new String[7];
+        for(int i = 0; i < floors.length; i++)
+            floors[i] = String.valueOf(i);
+
+        ListView listView = (ListView) findViewById(R.id.floating_list);
+        floorSelectorAdapter = new FloorSelectorAdapter(this, floors, listView);
+        listView.setAdapter(floorSelectorAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         if (abHelper.isSearchVisible()) {
-          hideKeyboard();
+            hideKeyboard();
         }
-
-        return false;
-      }
-    });
-
-    progressBar = (ProgressBar)findViewById(R.id.ab_progress);
-
-    cacheLayer.loadImage(imageHelper, progressBar, intent.getStringExtra(SearchLayer.BUILDING),
-        intent.getStringExtra(SearchLayer.FLOOR));
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    if (abHelper.isSearchVisible()) {
-      hideKeyboard();
     }
-  }
 
-  private void prepareForSegue(Map<String, String> info) {
-    String building = info.get(SearchLayer.BUILDING);
-    if (building != null && cacheLayer.isBuilding(building)) {
-      abHelper.setTitle(cacheLayer.getBuildingName(building));
-      cacheLayer.loadImage(imageHelper, progressBar, building, info.get(SearchLayer.FLOOR));
+    private void prepareForSegue(Map<String, String> info) {
+        String building = info.get(SearchLayer.BUILDING);
+        if (building != null && cacheLayer.isBuilding(building)) {
+            abHelper.setTitle(cacheLayer.getBuildingName(building));
+            cacheLayer.loadImage(imageHelper, progressBar, building, info.get(SearchLayer.FLOOR));
+        } else {
+            Toast.makeText(this, R.string.toast_invalid, Toast.LENGTH_SHORT).show();
+        }
     }
-    else {
-      Toast.makeText(this, R.string.toast_invalid, Toast.LENGTH_SHORT).show();
+
+    private void showKeyboard() {
+        abHelper.expand();
+        bgHelper.fadeIn();
+
+        abHelper.getEditText().requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(abHelper.getEditText(), 0);
     }
-  }
 
-  private void showKeyboard() {
-    abHelper.expand();
-    bgHelper.fadeIn();
+    private void hideKeyboard() {
+        abHelper.collapse();
+        bgHelper.fadeOut();
 
-    abHelper.getEditText().requestFocus();
-    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.showSoftInput(abHelper.getEditText(), 0);
-  }
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(abHelper.getEditText().getWindowToken(), 0);
+    }
 
-  private void hideKeyboard() {
-    abHelper.collapse();
-    bgHelper.fadeOut();
-
-    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.hideSoftInputFromWindow(abHelper.getEditText().getWindowToken(), 0);
-  }
-
-  @Override
-  public void onLowMemory() {
-    Log.d(TAG, "Low memory warning.");
-  }
+    @Override
+    public void onLowMemory() {
+        Log.d(TAG, "Low memory warning.");
+    }
 }

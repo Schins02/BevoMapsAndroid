@@ -30,7 +30,6 @@ public class FloorSelectorAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        //View rowView = inflater.inflate(R.layout.floor_selector_row, parent, false);
         View rowView = inflater.inflate(R.layout.floor_selector_cell, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.label);
         textView.setText(floors[position]);

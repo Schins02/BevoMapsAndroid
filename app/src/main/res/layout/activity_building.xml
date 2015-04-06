@@ -12,6 +12,8 @@
     android:layout_height="match_parent"
     android:background="@color/google_map_beige" />
 
+    <include layout="@layout/floating_floor_selector" />
+
   <View
     android:id="@+id/building_background"
     android:layout_width="match_parent"
