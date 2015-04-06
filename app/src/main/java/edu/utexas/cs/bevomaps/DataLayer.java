@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * DataLayer.java
@@ -90,7 +89,7 @@ class DataLayer {
      *
      * @return List of HashMaps containing marker data
      */
-    static List<Map<String, String>> getMarkerList() {
+    static List<HashMap<String, String>> getMarkerList() {
 
         ParseQuery<BuildingJSON> query = ParseQuery.getQuery("BuildingJSON");
         query = query.whereEqualTo("pk", "jsonObj");
