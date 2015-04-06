@@ -12,9 +12,10 @@
 5p_http://i.imgur.com/AqXH2Ki.png
 6p_http://i.imgur.com/KrEmP15.png
 7p_http://i.imgur.com/IWhbmr9.png
+floorNames_7 6 5 4 3 2 1
 defaultFloor_2
 shortName_GDC
 longName_Gates Dell Complex
-latitude_30.286243
-longitude_-97.736612
+latitude_30.286260
+longitude_-97.736615
 thumbnail_https://www.utexas.edu/maps/main/buildings/graphics/buildings/gdc.jpg
