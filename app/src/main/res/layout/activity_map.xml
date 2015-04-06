@@ -23,7 +23,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:alpha="0"
-      android:background="@color/translucent_grey" />
+      android:background="@color/google_grey" />
 
     <com.getbase.floatingactionbutton.FloatingActionButton
       android:id="@+id/map_location"
