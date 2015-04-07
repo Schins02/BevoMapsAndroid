@@ -9,6 +9,7 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.widget.ProgressBar;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,10 +59,14 @@ class CacheLayer implements Parcelable {
 
   // Methods--------------------------------------------------------
 
+  void loadFloors(FSHelper fsHelper, String building) {
+    fsHelper.addItems(buildingMap.get(building).get(DataLayer.FLOOR_NAMES).split("\\s+"));
+  }
+
   void loadImage(ImageHelper imageHelper, ProgressBar progressBar,
                  String building, String floor) {
     Map <String, String> infoMap = buildingMap.get(building);
-    if (floor == null) {
+    if (!infoMap.containsKey(floor)) {
       floor = infoMap.get(DataLayer.DEFAULT_FLOOR);
     }
 
@@ -104,6 +109,15 @@ class CacheLayer implements Parcelable {
     }
 
     return markerMap.get(building).get(DataLayer.LONG_NAME);
+  }
+
+  String getBuildingName(LatLng position) {
+    if (markerMap == null) {
+      Log.d(TAG, "Marker list not loaded.");
+      return position.toString();
+    }
+
+    return markerMap.get(position.toString()).get(DataLayer.SHORT_NAME);
   }
 
   Map<String, String> getSearchMap() {

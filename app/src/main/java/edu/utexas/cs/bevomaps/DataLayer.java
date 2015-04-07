@@ -18,7 +18,7 @@ import java.util.List;
 class DataLayer {
 
     static final String DEFAULT_FLOOR = "defaultFloor",
-                        NUM_FLOORS = "numFloors",
+                        FLOOR_NAMES = "floorNames",
                         PREVIEW_POSTFIX = "p",
 
                         LATITUDE = "latitude",

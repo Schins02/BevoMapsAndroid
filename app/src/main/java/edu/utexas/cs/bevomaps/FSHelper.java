@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
@@ -16,63 +17,69 @@ class FSHelper {
 
   // Fields---------------------------------------------------------
 
+  private final int pixelSize;
   private final ArrayAdapter<String> itemAdapter;
   private final LinearLayout listLayout;
-  private final int normalColor, selectedColor;
+  private final ScrollView scrollView;
 
-  private OnItemSelectedListener listener;
-  private TextView current;
+  private OnItemSelectedListener itemListener;
+
+  private static final float FADE_DISTANCE = 50; //50dp
+  private static final long FADE_DURATION = 100; //100ms
 
   // Constructors---------------------------------------------------
 
   FSHelper (Activity activity) {
+    pixelSize = activity.getResources().getDimensionPixelSize(R.dimen.fs_item_size);
     itemAdapter = new ArrayAdapter<>(activity, R.layout.floor_selector_item);
     listLayout = (LinearLayout)activity.findViewById(R.id.fs_list);
-    normalColor = activity.getResources().getColor(R.color.secondary_blue_75);
-    selectedColor = activity.getResources().getColor(R.color.secondary_black);
+    scrollView = (ScrollView)activity.findViewById(R.id.fs);
   }
 
   // Methods--------------------------------------------------------
 
-  void addItems(String[] items, String selected) {
-    itemAdapter.clear();
+  void addItems(String[] items) {
     itemAdapter.addAll(items);
 
     for (int i = 0; i < itemAdapter.getCount(); i++) {
-      TextView view = (TextView) itemAdapter.getView(i, null, null);
-      if (itemAdapter.getItem(i).equals(selected)) {
-        view.setTextColor(selectedColor);
-        current = view;
-      }
-
-      final int position = i;
+      TextView view = (TextView)itemAdapter.getView(i, null, null);
       view.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          TextView chosen = (TextView)v;
-          setViewSelected(chosen);
-
-          if (listener != null) {
-            listener.onItemClicked(chosen, position);
+          if (itemListener != null) {
+            itemListener.onItemClicked((TextView)v);
           }
         }
       });
-
-      listLayout.addView(view);
+      listLayout.addView(view, pixelSize, pixelSize);
     }
   }
 
-  void setOnItemClickListener(OnItemSelectedListener listener) {
-    this.listener = listener;
+  void fadeIn() {
+    scrollView.animate()
+        .alpha(1)
+        .translationYBy(-FADE_DISTANCE)
+        .setDuration(FADE_DURATION);
+
   }
 
-  private void setViewSelected(TextView view) {
-    current.setTextColor(normalColor);
-    view.setTextColor(selectedColor);
-    current = view;
+  void fadeOut() {
+    scrollView.animate()
+        .alpha(0)
+        .translationYBy(FADE_DISTANCE)
+        .setDuration(FADE_DURATION);
+  }
+
+  void clear() {
+    itemAdapter.clear();
+    listLayout.removeAllViews();
+  }
+
+  void setOnItemClickListener(OnItemSelectedListener listener) {
+    this.itemListener = listener;
   }
 
   static interface OnItemSelectedListener {
-    void onItemClicked(TextView view, int position);
+    void onItemClicked(TextView view);
   }
 }

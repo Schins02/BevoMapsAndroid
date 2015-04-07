@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <color name="burnt_orange">#BF5700</color>
+  <color name="clear_orange">#33BF5700</color>
   <color name="disabled_grey">#BDBDBD</color>
   <color name="google_grey">#4C000000</color>
   <color name="google_map_beige">#E8DDBD</color>

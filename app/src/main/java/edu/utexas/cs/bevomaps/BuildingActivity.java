@@ -26,9 +26,11 @@ public class BuildingActivity extends Activity {
   // Fields---------------------------------------------------------
 
   private CacheLayer cacheLayer;
+  private String building, floor;
 
   private ABHelper abHelper;
   private BGHelper bgHelper;
+  private FSHelper fsHelper;
   private ImageHelper imageHelper;
 
   private ProgressBar progressBar;
@@ -42,9 +44,13 @@ public class BuildingActivity extends Activity {
 
     Intent intent = getIntent();
     cacheLayer = intent.getParcelableExtra("cache");
+    building = intent.getStringExtra(SearchLayer.BUILDING);
+    floor = intent.getStringExtra(SearchLayer.FLOOR);
 
     String text = "";
     if (in != null) {
+      building = in.getString(SearchLayer.BUILDING);
+      floor = in.getString(SearchLayer.FLOOR);
       text = in.getString("searchText");
     }
 
@@ -68,8 +74,9 @@ public class BuildingActivity extends Activity {
       @Override
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         hideKeyboard();
-        prepareForSegue(SearchLayer.parseInputText(cacheLayer,
-            abHelper.getEditText().getText().toString()));
+        Map<String, String> infoMap =
+            SearchLayer.parseInputText(cacheLayer, abHelper.getEditText().getText().toString());
+        prepareForSegue(infoMap.get(SearchLayer.BUILDING), infoMap.get(SearchLayer.FLOOR));
         return true;
       }
     });
@@ -84,24 +91,43 @@ public class BuildingActivity extends Activity {
         return false;
       }
     });
+    fsHelper = new FSHelper(this);
+    fsHelper.setOnItemClickListener(new FSHelper.OnItemSelectedListener() {
+      @Override
+      public void onItemClicked(TextView view) {
+        prepareForSegue(building, view.getText().toString());
+      }
+    });
     imageHelper = new ImageHelper((SubsamplingScaleImageView)findViewById(R.id.building_image));
 
-    progressBar = (ProgressBar)findViewById(R.id.ab_progress_bar);
+    progressBar = (ProgressBar)findViewById(R.id.ab_progress);
 
-    cacheLayer.loadImage(imageHelper, progressBar,
-        intent.getStringExtra(SearchLayer.BUILDING), intent.getStringExtra(SearchLayer.FLOOR));
+    cacheLayer.loadFloors(fsHelper, building);
+    cacheLayer.loadImage(imageHelper, progressBar, building, floor);
   }
 
   @Override
   protected void onSaveInstanceState(@NonNull Bundle out) {
+    out.putString(SearchLayer.BUILDING, building);
+    out.putString(SearchLayer.FLOOR, floor);
     out.putString("searchText", abHelper.getEditText().getText().toString());
   }
 
-  private void prepareForSegue(Map<String, String> info) {
-    String building = info.get(SearchLayer.BUILDING);
-    if (building != null && cacheLayer.isBuilding(building)) {
+  private void prepareForSegue(String building, String floor) {
+    if (this.building.equals(building)) {
+      this.floor = floor;
+
+      cacheLayer.loadImage(imageHelper, progressBar, building, floor);
+    }
+    else if (building != null && cacheLayer.isBuilding(building)) {
+      this.building = building;
+      this.floor = floor;
+
       abHelper.setTitle(cacheLayer.getBuildingName(building));
-      cacheLayer.loadImage(imageHelper, progressBar, building, info.get(SearchLayer.FLOOR));
+      fsHelper.clear();
+
+      cacheLayer.loadFloors(fsHelper, building);
+      cacheLayer.loadImage(imageHelper, progressBar, building, floor);
     }
     else {
       Toast.makeText(this, R.string.toast_invalid, Toast.LENGTH_SHORT).show();
@@ -111,6 +137,7 @@ public class BuildingActivity extends Activity {
   private void showKeyboard() {
     abHelper.expand();
     bgHelper.fadeIn();
+    fsHelper.fadeOut();
 
     abHelper.getEditText().requestFocus();
     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -120,6 +147,7 @@ public class BuildingActivity extends Activity {
   private void hideKeyboard() {
     abHelper.collapse();
     bgHelper.fadeOut();
+    fsHelper.fadeIn();
 
     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     imm.hideSoftInputFromWindow(abHelper.getEditText().getWindowToken(), 0);

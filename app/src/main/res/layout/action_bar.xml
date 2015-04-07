@@ -15,7 +15,7 @@
     android:layout_marginBottom="3dp"
     android:background="@color/burnt_orange"
     android:contentDescription="@string/button_back"
-    android:src="@drawable/back" />
+    android:src="@drawable/back_button" />
 
   <ImageButton
     android:id="@+id/ab_search"
@@ -47,13 +47,13 @@
 
   <ProgressBar
     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-    android:id="@+id/ab_progress_bar"
+    android:id="@+id/ab_progress"
     android:layout_width="match_parent"
-    android:layout_height="2dp"
+    android:layout_height="3dp"
     android:layout_alignParentBottom="true"
     android:alpha="0"
     android:max="100"
-    android:progressDrawable="@drawable/progress" />
+    android:progressDrawable="@drawable/progress_bar" />
 
   <RelativeLayout
     android:id="@+id/ab_search_bar"

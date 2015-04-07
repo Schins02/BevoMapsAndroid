@@ -19,8 +19,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Marker;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseObject;
@@ -80,7 +82,14 @@ public class MapActivity extends Activity {
       }
     });
     mapHelper = new MapHelper(this,
-        (MapFragment) getFragmentManager().findFragmentById(R.id.map_map), position, cacheLayer);
+        (MapFragment) getFragmentManager().findFragmentById(R.id.map_map),
+        position,cacheLayer, new GoogleMap.OnMarkerClickListener() {
+      @Override
+      public boolean onMarkerClick(Marker marker) {
+        prepareForSegue(cacheLayer.getBuildingName(marker.getPosition()), null);
+        return true;
+      }
+    });
     fabHelper = new FABHelper((FloatingActionButton) findViewById(R.id.map_location));
     fabHelper.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -103,7 +112,9 @@ public class MapActivity extends Activity {
       @Override
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         hideKeyboard();
-        prepareForSegue(SearchLayer.parseInputText(cacheLayer, textView.getText().toString()));
+        Map<String, String> infoMap =
+            SearchLayer.parseInputText(cacheLayer, textView.getText().toString());
+        prepareForSegue(infoMap.get(SearchLayer.BUILDING), infoMap.get(SearchLayer.FLOOR));
         return true;
       }
     });
@@ -129,14 +140,13 @@ public class MapActivity extends Activity {
     out.putString("searchText", textView.getText().toString());
   }
 
-  private void prepareForSegue(Map<String, String> info) {
-    String building = info.get(SearchLayer.BUILDING);
+  private void prepareForSegue(String building, String floor) {
     if (building != null && cacheLayer.isBuilding(building)) {
       Intent intent = new Intent(this, BuildingActivity.class);
       intent.putExtra("cache", cacheLayer)
             .putExtra("name", cacheLayer.getBuildingName(building))
             .putExtra(SearchLayer.BUILDING, building)
-            .putExtra(SearchLayer.FLOOR, info.get(SearchLayer.FLOOR));
+            .putExtra(SearchLayer.FLOOR, floor);
       startActivity(intent);
     }
     else {

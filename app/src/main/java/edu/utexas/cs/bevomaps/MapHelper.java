@@ -1,7 +1,6 @@
 package edu.utexas.cs.bevomaps;
 
-import android.content.Context;
-import android.graphics.Color;
+import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -37,6 +36,7 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
   private GoogleMap map;
   private Marker marker;
 
+  private final int color;
   private final GoogleApiClient client;
   private final View view;
 
@@ -45,17 +45,16 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
   private static final LatLng UT_TOWER = new LatLng(30.2861, -97.739321);
   private static final LocationRequest REQUEST = new LocationRequest();
 
-  private static final int UT_COLOR = Color.argb(50, 191, 87, 0);
-
   // Constructors---------------------------------------------------
 
-  MapHelper(final Context context, MapFragment fragment,
-            final CameraPosition position, final CacheLayer cache) {
+  MapHelper(Activity activity, MapFragment fragment, final CameraPosition position,
+            final CacheLayer cache, final GoogleMap.OnMarkerClickListener listener) {
     REQUEST.setInterval(INTERVAL);
     REQUEST.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
+    color = activity.getResources().getColor(R.color.clear_orange);
     view = fragment.getView();
-    client = new GoogleApiClient.Builder(context)
+    client = new GoogleApiClient.Builder(activity)
         .addConnectionCallbacks(this)
         .addApi(LocationServices.API)
         .build();
@@ -73,11 +72,12 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
         googleMap.moveCamera(position != null ?
             CameraUpdateFactory.newCameraPosition(position) :
             CameraUpdateFactory.newLatLngZoom(UT_TOWER, ZOOM));
+        googleMap.setOnMarkerClickListener(listener);
 
         cache.loadMarkers(googleMap);
         circle = googleMap.addCircle(new CircleOptions()
             .center(UT_TOWER)
-            .fillColor(UT_COLOR)
+            .fillColor(color)
             .strokeWidth(0));
         marker = googleMap.addMarker(new MarkerOptions()
             .position(UT_TOWER)
@@ -104,7 +104,8 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
     marker.setPosition(position);
 
     if (following) {
-      map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, ZOOM));
+      map.animateCamera(CameraUpdateFactory
+          .newCameraPosition(new CameraPosition(position, ZOOM, 0, 0)));
     }
   }
 
@@ -135,10 +136,6 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
     if (following) {
       setLocation();
     }
-  }
-
-  void setOnMarkerClickListener(GoogleMap.OnMarkerClickListener listener) {
-    map.setOnMarkerClickListener(listener);
   }
 
   private void setLocation() {

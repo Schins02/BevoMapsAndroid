@@ -106,7 +106,7 @@ class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
 
       for (String key : infoMap.keySet()) {
         if (!key.equals(DataLayer.DEFAULT_FLOOR) &&
-            !key.equals(DataLayer.NUM_FLOORS) &&
+            !key.equals(DataLayer.FLOOR_NAMES) &&
             !key.equals(floor) &&
             !key.equals(floor + DataLayer.PREVIEW_POSTFIX)) {
           new CacheTask().execute(infoMap.get(key));
