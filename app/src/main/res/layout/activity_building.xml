@@ -19,6 +19,6 @@
     android:alpha="0"
     android:background="@color/google_grey" />
 
-  <include layout="@layout/floating_floor_selector" />
+  <include layout="@layout/floor_selector" />
   <include layout="@layout/action_bar" />
 </RelativeLayout>

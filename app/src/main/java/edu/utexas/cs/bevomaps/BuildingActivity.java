@@ -86,7 +86,7 @@ public class BuildingActivity extends Activity {
     });
     imageHelper = new ImageHelper((SubsamplingScaleImageView)findViewById(R.id.building_image));
 
-    progressBar = (ProgressBar)findViewById(R.id.ab_progress);
+    progressBar = (ProgressBar)findViewById(R.id.ab_progress_bar);
 
     cacheLayer.loadImage(imageHelper, progressBar,
         intent.getStringExtra(SearchLayer.BUILDING), intent.getStringExtra(SearchLayer.FLOOR));

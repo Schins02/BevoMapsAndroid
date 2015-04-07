@@ -37,7 +37,7 @@
       app:fab_colorNormal="@color/burnt_orange"
       app:fab_colorPressed="@color/burnt_orange" />
 
-    <include layout="@layout/floating_search_bar" />
+    <include layout="@layout/search_bar" />
   </RelativeLayout>
 
   <ListView

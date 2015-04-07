@@ -47,7 +47,7 @@
 
   <ProgressBar
     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-    android:id="@+id/ab_progress"
+    android:id="@+id/ab_progress_bar"
     android:layout_width="match_parent"
     android:layout_height="2dp"
     android:layout_alignParentBottom="true"

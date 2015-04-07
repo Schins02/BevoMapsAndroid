@@ -89,7 +89,7 @@ public class MapActivity extends Activity {
       }
     });
 
-    textView = (EditText) findViewById(R.id.fsb_text);
+    textView = (EditText) findViewById(R.id.sb_text);
     textView.setText(text);
     textView.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -108,7 +108,7 @@ public class MapActivity extends Activity {
       }
     });
 
-    ImageButton menuButton = (ImageButton) findViewById(R.id.fsb_menu);
+    ImageButton menuButton = (ImageButton) findViewById(R.id.sb_menu);
     menuButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -178,7 +178,7 @@ public class MapActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
             WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-        View fsb = findViewById(R.id.fsb);
+        View fsb = findViewById(R.id.sb);
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) fsb.getLayoutParams();
         params.topMargin = getResources().getDimensionPixelSize(id);
         fsb.setLayoutParams(params);

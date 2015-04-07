@@ -1,5 +1,6 @@
 package edu.utexas.cs.bevomaps;
 
+import android.app.Activity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -25,7 +26,7 @@ class ABHelper {
 
   // Constructors---------------------------------------------------
 
-  ABHelper(BuildingActivity activity) {
+  ABHelper(Activity activity) {
     distance = activity.getResources().getDisplayMetrics().widthPixels / 2;
     text = (EditText)activity.findViewById(R.id.ab_text);
     back = (ImageButton)activity.findViewById(R.id.ab_back);
