@@ -1,0 +1,12 @@
+01_http://i.imgur.com/TzcdJ4H.png
+02_http://i.imgur.com/JPfHoEB.png
+03_http://i.imgur.com/x0GuoO7.png
+04_http://i.imgur.com/7WZVbHI.png
+05_http://i.imgur.com/NSZAum1.png
+06_http://i.imgur.com/nYueb45.png
+defaultFloor_2
+shortName_WEL
+longName_Robert A. Welch Hall
+latitude_30.286506
+longitude_-97.737446
+thumbnail_http://www.universityoftexasimages.com/wp-content/gallery/campus-images/2014030903-Welch-Hall-entrance-The-University-of-Texas-Austin-Texas.jpg
