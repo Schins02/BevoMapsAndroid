@@ -1,9 +1,16 @@
-01_http://i.imgur.com/TzcdJ4H.png
-02_http://i.imgur.com/JPfHoEB.png
-03_http://i.imgur.com/x0GuoO7.png
-04_http://i.imgur.com/7WZVbHI.png
-05_http://i.imgur.com/NSZAum1.png
-06_http://i.imgur.com/nYueb45.png
+01_http://i.imgur.com/Es5wW5d.png
+02_http://i.imgur.com/1r5ba37.png
+03_http://i.imgur.com/xTRP1uN.png
+04_http://i.imgur.com/ms52XSC.png
+05_http://i.imgur.com/YUqhtTK.png
+06_http://i.imgur.com/ANRutyI.png
+1p_http://i.imgur.com/bQb2WnU.png
+2p_http://i.imgur.com/lNHCLyo.png
+3p_http://i.imgur.com/HtGsPy2.png
+4p_http://i.imgur.com/MMYmbGK.png
+5p_http://i.imgur.com/4CbZM5s.png
+6p_http://i.imgur.com/UKsQcog.png
+floorNames_6 5 4 3 2 1
 defaultFloor_2
 shortName_WEL
 longName_Robert A. Welch Hall
