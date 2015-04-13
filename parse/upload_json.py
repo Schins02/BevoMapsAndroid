@@ -34,10 +34,6 @@ for root, dirs, files, in os.walk(os.getcwd()) :
 				floor_and_url = line.split("_")
 				if floor_and_url[0] not in marker_list_fields :
 					url_data["Buildings"][building_name][floor_and_url[0]] = floor_and_url[1][0:-1]
-					number_of_floors += 1
-
-			#number of floors - 1 because one line for default_floor 
-			url_data["Buildings"][building_name]["numFloors"] = str((number_of_floors - 1) / 2)
 
 print url_data
 

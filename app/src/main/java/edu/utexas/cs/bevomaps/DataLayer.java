@@ -25,7 +25,10 @@ class DataLayer {
                         LONGITUDE = "longitude",
                         LONG_NAME = "longName",
                         SHORT_NAME = "shortName",
-                        THUMBNAIL = "thumbnail";
+                        THUMBNAIL = "thumbnail",
+
+                        PARSE_APP_ID = "xTzPEGb9UXNKHH6lEphikPyDpfXeSinJ9HoIqODU",
+                        PARSE_CLIENT_ID = "tmEVaWNvPic1VQd2c69Zn0u6gieingOJcMIF6zrD";
 
     private static final String TAG = DataLayer.class.getSimpleName();
 

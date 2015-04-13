@@ -174,8 +174,8 @@ public class MapActivity extends Activity {
   private void configParse() {
     ParseObject.registerSubclass(BuildingJSON.class);
     Parse.initialize(this,
-        "xTzPEGb9UXNKHH6lEphikPyDpfXeSinJ9HoIqODU",
-        "tmEVaWNvPic1VQd2c69Zn0u6gieingOJcMIF6zrD");
+            DataLayer.PARSE_APP_ID,
+            DataLayer.PARSE_CLIENT_ID);
     ParseACL acl = new ParseACL();
     acl.setPublicReadAccess(true);
     ParseACL.setDefaultACL(acl, true);

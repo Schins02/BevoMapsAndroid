@@ -1,0 +1,19 @@
+1_http://i.imgur.com/8YJhn83.png
+2_http://i.imgur.com/Edb60lA.png
+3_http://i.imgur.com/XOOFyyq.png
+4_http://i.imgur.com/QWKrY4i.png
+5_http://i.imgur.com/jSghgS2.png
+6_http://i.imgur.com/b3nWCYN.png
+1p_http://i.imgur.com/btvWN5O.png
+2p_http://i.imgur.com/jCyKS9l.png
+3p_http://i.imgur.com/jR3AItA.png
+4p_http://i.imgur.com/XJAeF9J.png
+5p_http://i.imgur.com/b9uUP78.png
+6p_http://i.imgur.com/tod5S0E.png
+floorNames_6 5 4 3 2 1
+defaultFloor_1
+shortName_SAC
+longName_Student Activity Center
+latitude_30.284899
+longitude_-97.736025
+thumbnail_https://www.utexas.edu/maps/main/buildings/graphics/buildings/sac_south.jpg
