@@ -34,8 +34,8 @@
       android:layout_alignParentRight="true"
       android:layout_margin="6dp"
       app:fab_icon="@drawable/ic_crosshair"
-      app:fab_colorNormal="@color/burnt_orange"
-      app:fab_colorPressed="@color/burnt_orange" />
+      app:fab_colorNormal="@color/burnt_orange_100"
+      app:fab_colorPressed="@color/burnt_orange_90" />
 
     <include layout="@layout/search_bar" />
   </RelativeLayout>

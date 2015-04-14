@@ -13,7 +13,7 @@
     android:layout_alignParentLeft="true"
     android:layout_alignParentStart="true"
     android:layout_marginBottom="3dp"
-    android:background="@color/burnt_orange"
+    android:background="@color/burnt_orange_100"
     android:contentDescription="@string/button_back"
     android:src="@drawable/back_button" />
 
@@ -25,7 +25,7 @@
     android:layout_alignParentRight="true"
     android:layout_alignParentEnd="true"
     android:layout_marginBottom="3dp"
-    android:background="@color/burnt_orange"
+    android:background="@color/burnt_orange_100"
     android:contentDescription="@string/button_search"
     android:src="@drawable/ic_search" />
 

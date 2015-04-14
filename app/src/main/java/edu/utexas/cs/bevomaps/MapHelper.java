@@ -36,12 +36,11 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
   private GoogleMap map;
   private Marker marker;
 
-  private final int color;
   private final GoogleApiClient client;
   private final View view;
 
   private static final float ZOOM = 17;
-  private static final long INTERVAL = 6000; //6s
+  private static final long INTERVAL = 5000; //5s
   private static final LatLng UT_TOWER = new LatLng(30.2861, -97.739321);
   private static final LocationRequest REQUEST = new LocationRequest();
 
@@ -52,7 +51,8 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
     REQUEST.setInterval(INTERVAL);
     REQUEST.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-    color = activity.getResources().getColor(R.color.clear_orange);
+    final int fill = activity.getResources().getColor(R.color.burnt_orange_15),
+        stroke = activity.getResources().getColor(R.color.burnt_orange_30);
     view = fragment.getView();
     client = new GoogleApiClient.Builder(activity)
         .addConnectionCallbacks(this)
@@ -77,8 +77,9 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
         cache.loadMarkers(googleMap);
         circle = googleMap.addCircle(new CircleOptions()
             .center(UT_TOWER)
-            .fillColor(color)
-            .strokeWidth(0));
+            .fillColor(fill)
+            .strokeColor(stroke)
+            .strokeWidth(1));
         marker = googleMap.addMarker(new MarkerOptions()
             .position(UT_TOWER)
             .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker))
