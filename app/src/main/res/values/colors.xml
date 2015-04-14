@@ -2,8 +2,8 @@
 <resources>
   <color name="burnt_orange_100">#BF5700</color>
   <color name="burnt_orange_90">#E6BF5700</color>
-  <color name="burnt_orange_30">#4DBF5700</color>
-  <color name="burnt_orange_15">#26BF5700</color>
+  <color name="burnt_orange_20">#33BF5700</color>
+  <color name="burnt_orange_10">#1ABF5700</color>
   <color name="disabled_grey">#BDBDBD</color>
   <color name="google_grey">#4C000000</color>
   <color name="google_map_beige">#E8DDBD</color>

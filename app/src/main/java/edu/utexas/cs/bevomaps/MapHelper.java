@@ -51,8 +51,8 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
     REQUEST.setInterval(INTERVAL);
     REQUEST.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-    final int fill = activity.getResources().getColor(R.color.burnt_orange_15),
-        stroke = activity.getResources().getColor(R.color.burnt_orange_30);
+    final int fill = activity.getResources().getColor(R.color.burnt_orange_10),
+        stroke = activity.getResources().getColor(R.color.burnt_orange_20);
     view = fragment.getView();
     client = new GoogleApiClient.Builder(activity)
         .addConnectionCallbacks(this)
@@ -79,7 +79,7 @@ class MapHelper implements GoogleApiClient.ConnectionCallbacks, LocationListener
             .center(UT_TOWER)
             .fillColor(fill)
             .strokeColor(stroke)
-            .strokeWidth(1));
+            .strokeWidth(2));
         marker = googleMap.addMarker(new MarkerOptions()
             .position(UT_TOWER)
             .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker))
