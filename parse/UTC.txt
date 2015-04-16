@@ -1,0 +1,15 @@
+1_http://i.imgur.com/7wg80KX.png
+2_http://i.imgur.com/Qso43iw.png
+3_http://i.imgur.com/GKhzW55.png
+4_http://i.imgur.com/Q4rkuQ5.png
+1p_http://i.imgur.com/Qmuu4dV.png
+2p_http://i.imgur.com/2p3XcVR.png
+3p_http://i.imgur.com/5K3YbX8.png
+4p_http://i.imgur.com/E4GTqPz.png
+floorNames_4 3 2 1
+defaultFloor_2
+shortName_UTC
+longName_University Teaching Center
+latitude_30.283120
+longitude_-97.738807
+thumbnail_http://i.imgur.com/RIUctqc.png

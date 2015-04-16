@@ -1,19 +1,19 @@
-1_http://i.imgur.com/Es5wW5d.png
-2_http://i.imgur.com/1r5ba37.png
-3_http://i.imgur.com/xTRP1uN.png
-4_http://i.imgur.com/ms52XSC.png
-5_http://i.imgur.com/YUqhtTK.png
-6_http://i.imgur.com/ANRutyI.png
-1p_http://i.imgur.com/bQb2WnU.png
-2p_http://i.imgur.com/lNHCLyo.png
-3p_http://i.imgur.com/HtGsPy2.png
-4p_http://i.imgur.com/MMYmbGK.png
-5p_http://i.imgur.com/4CbZM5s.png
-6p_http://i.imgur.com/UKsQcog.png
+1_http://i.imgur.com/ZXUJvDp.png
+2_http://i.imgur.com/ayREREm.png
+3_http://i.imgur.com/fRHRwsN.png
+4_http://i.imgur.com/PYjZtyp.png
+5_http://i.imgur.com/TSsOkG9.png
+6_http://i.imgur.com/5Zrmd7v.png
+1p_http://i.imgur.com/Pnx47xl.png
+2p_http://i.imgur.com/hIm165K.png
+3p_http://i.imgur.com/8AbMyrf.png
+4p_http://i.imgur.com/UbiDnj4.png
+5p_http://i.imgur.com/zcNWsOK.png
+6p_http://i.imgur.com/5ibwHC1.png
 floorNames_6 5 4 3 2 1
 defaultFloor_2
 shortName_WEL
 longName_Robert A. Welch Hall
-latitude_30.286506
-longitude_-97.737446
-thumbnail_http://www.universityoftexasimages.com/wp-content/gallery/campus-images/2014030903-Welch-Hall-entrance-The-University-of-Texas-Austin-Texas.jpg
+latitude_30.286514
+longitude_-97.737756
+thumbnail_http://i.imgur.com/P8wlNY5.png
