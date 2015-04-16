@@ -2,26 +2,27 @@ package edu.utexas.cs.bevomaps;
 
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.view.View;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 /**
- * ImageHelper.java
+ * ImageVC.java
  *
  * Created by Eric on 4/3/15.
  */
 
-class ImageHelper {
+class ImageVC {
 
   // Fields---------------------------------------------------------
 
-  private final SubsamplingScaleImageView view;
+  private final SubsamplingScaleImageView imageView;
 
   // Constructors---------------------------------------------------
 
-  ImageHelper(SubsamplingScaleImageView view) {
-    view.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_CENTER);
-    this.view = view;
+  ImageVC(View view) {
+    imageView = (SubsamplingScaleImageView)view;
+    imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_CENTER);
   }
 
   // Methods--------------------------------------------------------
@@ -31,7 +32,7 @@ class ImageHelper {
     options.inJustDecodeBounds = true;
     BitmapFactory.decodeFile(image.getPath(), options);
 
-    view.setImage(ImageSource.uri(image).dimensions(options.outWidth, options.outHeight),
+    imageView.setImage(ImageSource.uri(image).dimensions(options.outWidth, options.outHeight),
         ImageSource.uri(preview));
   }
 }

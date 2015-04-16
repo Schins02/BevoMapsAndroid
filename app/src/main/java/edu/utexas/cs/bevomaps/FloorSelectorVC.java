@@ -8,14 +8,17 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
- * FSHelper.java
+ * FloorSelectorVC.java
  *
  * Created by Eric on 4/6/15.
  */
 
-class FSHelper {
+class FloorSelectorVC {
 
   // Fields---------------------------------------------------------
+
+  private static final float FADE_DISTANCE = 50; //50dp
+  private static final long FADE_DURATION = 100; //100ms
 
   private final int pixelSize;
   private final ArrayAdapter<String> itemAdapter;
@@ -24,12 +27,9 @@ class FSHelper {
 
   private OnItemSelectedListener itemListener;
 
-  private static final float FADE_DISTANCE = 50; //50dp
-  private static final long FADE_DURATION = 100; //100ms
-
   // Constructors---------------------------------------------------
 
-  FSHelper (Activity activity) {
+  FloorSelectorVC(Activity activity) {
     pixelSize = activity.getResources().getDimensionPixelSize(R.dimen.fs_item_size);
     itemAdapter = new ArrayAdapter<>(activity, R.layout.floor_selector_item);
     listLayout = (LinearLayout)activity.findViewById(R.id.fs_list);
@@ -55,7 +55,7 @@ class FSHelper {
     }
   }
 
-  void fadeIn() {
+  void animateFadeIn() {
     scrollView.animate()
         .alpha(1)
         .translationYBy(-FADE_DISTANCE)
@@ -63,14 +63,14 @@ class FSHelper {
 
   }
 
-  void fadeOut() {
+  void animateFadeOut() {
     scrollView.animate()
         .alpha(0)
         .translationYBy(FADE_DISTANCE)
         .setDuration(FADE_DURATION);
   }
 
-  void clear() {
+  void clearItems() {
     itemAdapter.clear();
     listLayout.removeAllViews();
   }

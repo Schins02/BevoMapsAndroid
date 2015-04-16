@@ -4,48 +4,48 @@ import android.view.View;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 /**
- * FABHelper.java
+ * FABVC.java
  *
  * Created by Eric on 4/2/15.
  */
 
-class FABHelper {
+class FABVC {
 
   // Fields---------------------------------------------------------
 
-  private final FloatingActionButton button;
+  private static final float SLIDE_DISTANCE = 50; //50dp
+  private static final long SLIDE_DURATION = 100; //100ms
 
-  private static final float FADE_DISTANCE = 50; //50dp
-  private static final long FADE_DURATION = 100; //100ms
+  private final FloatingActionButton button;
 
   // Constructors---------------------------------------------------
 
-  FABHelper(FloatingActionButton button) {
+  FABVC(FloatingActionButton button) {
     this.button = button;
   }
 
   // Methods--------------------------------------------------------
 
-  void fadeIn() {
+  void animateSlideIn() {
     button.animate()
           .alpha(1)
-          .translationYBy(-FADE_DISTANCE)
-          .setDuration(FADE_DURATION);
+          .translationYBy(-SLIDE_DISTANCE)
+          .setDuration(SLIDE_DURATION);
 
   }
 
-  void fadeOut() {
+  void animateSlideOut() {
     button.animate()
           .alpha(0)
-          .translationYBy(FADE_DISTANCE)
-          .setDuration(FADE_DURATION);
+          .translationYBy(SLIDE_DISTANCE)
+          .setDuration(SLIDE_DURATION);
   }
 
-  void moveUp() {
+  void animateMoveUp() {
 
   }
 
-  void moveDown() {
+  void animateMveDown() {
 
   }
 

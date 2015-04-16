@@ -3,7 +3,6 @@ package edu.utexas.cs.bevomaps;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ProgressBar;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,6 +10,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,45 +20,66 @@ import java.util.Map;
  * Created by Eric on 3/29/15.
  */
 
-class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
+class ImageTask extends AsyncTask <Void, Double, Uri[]> {
 
   // Fields---------------------------------------------------------
 
   private static final int BUFFER_SIZE = 102400; //100KB
+  private static final String TAG = ImageTask.class.getSimpleName();
 
   private final File cacheDir;
-  private final ImageHelper imageHelper;
-  private final Map<String, String> infoMap;
-  private final String floor;
-  private final ProgressBar progressBar;
+  private final ImageVC imageVC;
+  private final OnProgressUpdateListener updateListener;
 
-  private static final long FADE_DURATION = 500; //500ms
-  private static final String TAG = ImageTask.class.getSimpleName();
+  private final Map<String, String> buildingInfo;
+  private final String selectedFloor;
+
+  private double curProgress, maxProgress;
+  private List<CacheTask> cacheTasks;
 
   // Constructors---------------------------------------------------
 
-  ImageTask(ImageHelper imageHelper, ProgressBar progressBar,
-            Map<String, String> infoMap, String floor, File cacheDir) {
-    this.cacheDir = cacheDir;
-    this.imageHelper = imageHelper;
-    this.infoMap = infoMap;
-    this.floor = floor;
-    this.progressBar = progressBar;
+  ImageTask(ImageVC image, Map<String, String> info, String floor,
+            File dir, OnProgressUpdateListener listener) {
+    imageVC = image;
+    buildingInfo = info;
+    selectedFloor = floor;
+    cacheDir = dir;
+    updateListener = listener;
+    cacheTasks = new LinkedList<>();
   }
 
   // Methods--------------------------------------------------------
 
   @Override
   protected void onPreExecute() {
-    progressBar.setAlpha(1);
-    progressBar.setProgress(10);
+    if (updateListener != null) {
+      updateListener.onProgressBegin();
+    }
+    maxProgress += 200;
+    publishProgress(50.0);
+
     freeCache();
+
+    for (String key : buildingInfo.keySet()) {
+      if (!key.equals(DataLayer.DEFAULT_FLOOR) &&
+          !key.equals(DataLayer.FLOOR_NAMES) &&
+          !key.equals(selectedFloor) &&
+          !key.equals(selectedFloor + DataLayer.PREVIEW_POSTFIX)) {
+        maxProgress += 100;
+
+        CacheTask task = new CacheTask();
+        task.listener = updateListener;
+        task.url = buildingInfo.get(key);
+        cacheTasks.add(task);
+      }
+    }
   }
 
   @Override
   protected Uri[] doInBackground(Void... params) {
-    String imageUrl = infoMap.get(floor),
-        previewUrl = infoMap.get(floor + DataLayer.PREVIEW_POSTFIX);
+    String imageUrl = buildingInfo.get(selectedFloor),
+        previewUrl = buildingInfo.get(selectedFloor + DataLayer.PREVIEW_POSTFIX);
     HttpURLConnection connection = null;
 
     try {
@@ -67,7 +89,7 @@ class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
       InputStream in = connection.getInputStream();
 
       copyStream(in, out);
-      publishProgress(40);
+      publishProgress(80.0);
 
       File previewCache = new File(cacheDir, CacheLayer.getImageName(previewUrl));
       out = new FileOutputStream(previewCache);
@@ -75,7 +97,7 @@ class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
       in = connection.getInputStream();
 
       copyStream(in, out);
-      publishProgress(70);
+      publishProgress(50.0);
 
       return new Uri[]{Uri.fromFile(imageCache), Uri.fromFile(previewCache)};
     }
@@ -92,25 +114,21 @@ class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
   }
 
   @Override
-  protected void onProgressUpdate(Integer... values) {
-    progressBar.setProgress(values[0]);
+  protected void onProgressUpdate(Double... values) {
+    curProgress += values[0];
+    if (updateListener != null) {
+      updateListener.onProgressUpdate(curProgress / maxProgress);
+    }
   }
 
   @Override
   protected void onPostExecute(Uri[] uri) {
-    progressBar.setProgress(100);
-    progressBar.animate().alpha(0).setDuration(FADE_DURATION);
+    publishProgress(20.0);
 
     if (uri != null) {
-      imageHelper.setImage(uri[0], uri[1]);
-
-      for (String key : infoMap.keySet()) {
-        if (!key.equals(DataLayer.DEFAULT_FLOOR) &&
-            !key.equals(DataLayer.FLOOR_NAMES) &&
-            !key.equals(floor) &&
-            !key.equals(floor + DataLayer.PREVIEW_POSTFIX)) {
-          new CacheTask().execute(infoMap.get(key));
-        }
+      imageVC.setImage(uri[0], uri[1]);
+      for (CacheTask task : cacheTasks) {
+        task.execute();
       }
     }
   }
@@ -154,15 +172,23 @@ class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
     in.close();
   }
 
-  private class CacheTask extends AsyncTask<String, Void, Void> {
+  static interface OnProgressUpdateListener {
+    void onProgressBegin();
+    void onProgressUpdate(double progress);
+  }
+
+  private class CacheTask extends AsyncTask<Void, Void, Void> {
+    private OnProgressUpdateListener listener;
+    private String url;
+
     @Override
-    protected Void doInBackground(String... params) {
+    protected Void doInBackground(Void... params) {
       HttpURLConnection connection = null;
 
       try {
         FileOutputStream out = new FileOutputStream(new File(cacheDir,
-            CacheLayer.getImageName(params[0])));
-        connection = (HttpURLConnection)new URL(params[0]).openConnection();
+            CacheLayer.getImageName(url)));
+        connection = (HttpURLConnection)new URL(url).openConnection();
         InputStream in = connection.getInputStream();
 
         copyStream(in, out);
@@ -177,6 +203,14 @@ class ImageTask extends AsyncTask <Void, Integer, Uri[]> {
       }
 
       return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void params) {
+      curProgress += 100;
+      if (listener != null) {
+        listener.onProgressUpdate(curProgress / maxProgress);
+      }
     }
   }
 }

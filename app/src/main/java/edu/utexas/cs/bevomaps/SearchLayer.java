@@ -22,12 +22,10 @@ class SearchLayer {
     String[] strings = s.split("\\s+");
 
     //Map of common searches to the building or floor
-    Map<String,String> cache_map = c.getSearchMap();
-    if(cache_map != null) {
-      for (String t : strings) {
-        if (cache_map.containsKey(t.toLowerCase())) {
-          s = s.replaceAll(t, cache_map.get(t).toLowerCase());
-        }
+    Map<String,String> cache_map = c.loadSearchMap();
+    for (String t : strings) {
+      if (cache_map.containsKey(t.toLowerCase())) {
+        s = s.replaceAll(t, cache_map.get(t).toLowerCase());
       }
     }
 
@@ -45,16 +43,6 @@ class SearchLayer {
             break;
         }
     }
-
-//    // Find building name in the search string
-//    Pattern pattern = Pattern.compile("([a-zA-Z]{3})");
-//    Matcher match = pattern.matcher(s);
-//    String building = null;
-//    String floor = null;
-//
-//    if(match.find()){
-//      building = match.group(1).toUpperCase();
-//    }
 
     // Find the floor in the string string
     Pattern roomPattern = Pattern.compile("(\\d\\.\\d*)");

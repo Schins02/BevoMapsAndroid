@@ -113,6 +113,6 @@ class DataLayer {
     }
 
     static HashMap<String, String> getSearchMap() {
-        return null;
+        return new HashMap<>();
     }
 }

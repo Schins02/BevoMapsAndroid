@@ -19,13 +19,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.Marker;
-import com.parse.Parse;
-import com.parse.ParseACL;
-import com.parse.ParseObject;
+
 import java.util.Map;
 
 /**
@@ -40,69 +36,58 @@ public class MapActivity extends Activity {
 
   private CacheLayer cacheLayer;
 
-  private BGHelper bgHelper;
-  private FABHelper fabHelper;
-  private MapHelper mapHelper;
+  private BackgroundVC backgroundVC;
+  private FABVC fabVC;
+  private MapVC mapVC;
 
   private EditText textView;
 
   // Methods--------------------------------------------------------
 
   @Override
-  protected void onCreate(Bundle in) {
-    super.onCreate(in);
+  protected void onCreate(Bundle bundle) {
+    super.onCreate(bundle);
     setContentView(R.layout.activity_map);
 
-    configParse();
-    configStatusBar();
+    cacheLayer = getIntent().getParcelableExtra(CacheLayer.class.getSimpleName());
+    configureStatusBar();
 
-
-    CameraPosition position = null;
-    String text = "";
-    if (in != null) {
-      cacheLayer = in.getParcelable("cacheLayer");
-      position = in.getParcelable("cameraPosition");
-      text = in.getString("searchText");
-    }
-    else {
-      cacheLayer = new CacheLayer(this);
-    }
-
-    bgHelper = new BGHelper(findViewById(R.id.map_background));
-    bgHelper.setOnTouchListener(new View.OnTouchListener() {
+    backgroundVC = new BackgroundVC(findViewById(R.id.map_background));
+    backgroundVC.setOnTouchListener(new View.OnTouchListener() {
       @Override
-      public boolean onTouch(View v, MotionEvent event) {
+      public boolean onTouch(View view, MotionEvent event) {
         if (textView.isCursorVisible()) {
           hideKeyboard();
-        } else {
-          mapHelper.setFollowing(false);
+          return true;
         }
-
+        mapVC.setCurFollow(false);
         return false;
       }
     });
-    mapHelper = new MapHelper(this,
-        (MapFragment) getFragmentManager().findFragmentById(R.id.map_map),
-        position,cacheLayer, new GoogleMap.OnMarkerClickListener() {
+
+    MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.map_fragment);
+    CameraPosition cameraPos = bundle != null ?
+        (CameraPosition)bundle.getParcelable("camera") : null;
+    int[] circleColors = {getResources().getColor(R.color.burnt_orange_10),
+        getResources().getColor(R.color.burnt_orange_20)};
+    mapVC = new MapVC(this, mapFragment, cameraPos, cacheLayer, circleColors);
+
+    FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.map_location);
+    fabVC = new FABVC(fab);
+    fabVC.setOnClickListener(new View.OnClickListener() {
       @Override
-      public boolean onMarkerClick(Marker marker) {
-        prepareForSegue(cacheLayer.getBuildingName(marker.getPosition()), null);
-        return true;
-      }
-    });
-    fabHelper = new FABHelper((FloatingActionButton) findViewById(R.id.map_location));
-    fabHelper.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        mapHelper.setFollowing(true);
+      public void onClick(View view) {
+        mapVC.setCurFollow(true);
       }
     });
 
-    textView = (EditText) findViewById(R.id.sb_text);
-    textView.setText(text);
+    textView = (EditText)findViewById(R.id.sb_text);
+    if (bundle != null) {
+      textView.setText(bundle.getCharSequence("text"));
+    }
     textView.setOnClickListener(new View.OnClickListener() {
       @Override
-      public void onClick(View v) {
+      public void onClick(View view) {
         if (!textView.isCursorVisible()) {
           showKeyboard();
         }
@@ -112,41 +97,38 @@ public class MapActivity extends Activity {
       @Override
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         hideKeyboard();
-        Map<String, String> infoMap =
-            SearchLayer.parseInputText(cacheLayer, textView.getText().toString());
-        prepareForSegue(infoMap.get(SearchLayer.BUILDING), infoMap.get(SearchLayer.FLOOR));
+
+        String input = textView.getText().toString();
+        Map<String, String> info = SearchLayer.parseInputText(cacheLayer, input);
+
+        prepareForSegue(info.get(SearchLayer.BUILDING), info.get(SearchLayer.FLOOR));
         return true;
       }
     });
 
-    ImageButton menuButton = (ImageButton) findViewById(R.id.sb_menu);
+    ImageButton menuButton = (ImageButton)findViewById(R.id.sb_menu);
     menuButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         if (textView.isCursorVisible()) {
           hideKeyboard();
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.map_drawer);
+        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.map_drawer);
         drawer.openDrawer(GravityCompat.START);
       }
     });
   }
 
-  @Override
-  protected void onSaveInstanceState(@NonNull Bundle out) {
-    out.putParcelable("cacheLayer", cacheLayer);
-    out.putParcelable("cameraPosition", mapHelper.getCameraPosition());
-    out.putString("searchText", textView.getText().toString());
-  }
-
   private void prepareForSegue(String building, String floor) {
-    if (building != null && cacheLayer.isBuilding(building)) {
+    String title = cacheLayer.getBuildingName(building);
+
+    if (building != null && title != null) {
       Intent intent = new Intent(this, BuildingActivity.class);
-      intent.putExtra("cache", cacheLayer)
-            .putExtra("name", cacheLayer.getBuildingName(building))
-            .putExtra(SearchLayer.BUILDING, building)
-            .putExtra(SearchLayer.FLOOR, floor);
+      intent.putExtra(CacheLayer.class.getSimpleName(), cacheLayer)
+          .putExtra("title", title)
+          .putExtra(SearchLayer.BUILDING, building)
+          .putExtra(SearchLayer.FLOOR, floor);
+
       startActivity(intent);
     }
     else {
@@ -154,44 +136,40 @@ public class MapActivity extends Activity {
     }
   }
 
+  @Override
+  protected void onSaveInstanceState(@NonNull Bundle bundle) {
+    bundle.putParcelable("camera", mapVC.getCameraPosition());
+    bundle.putCharSequence("text", textView.getText());
+  }
+
   private void showKeyboard() {
+    backgroundVC.animateFadeIn();
+    fabVC.animateSlideOut();
     textView.setCursorVisible(true);
-    bgHelper.fadeIn();
-    fabHelper.fadeOut();
   }
 
   private void hideKeyboard() {
+    backgroundVC.animateFadeOut();
+    fabVC.animateSlideIn();
     textView.setCursorVisible(false);
-    bgHelper.fadeOut();
-    fabHelper.fadeIn();
 
     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
 
-    mapHelper.redraw();
+    mapVC.invalidate();
   }
 
-  private void configParse() {
-    ParseObject.registerSubclass(BuildingJSON.class);
-    Parse.initialize(this,
-            DataLayer.PARSE_APP_ID,
-            DataLayer.PARSE_CLIENT_ID);
-    ParseACL acl = new ParseACL();
-    acl.setPublicReadAccess(true);
-    ParseACL.setDefaultACL(acl, true);
-  }
-
-  private void configStatusBar() {
+  private void configureStatusBar() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       int id = getResources().getIdentifier("status_bar_height", "dimen", "android");
       if (id > 0) {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
             WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-        View fsb = findViewById(R.id.sb);
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) fsb.getLayoutParams();
+        View searchBox = findViewById(R.id.sb);
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) searchBox.getLayoutParams();
         params.topMargin = getResources().getDimensionPixelSize(id);
-        fsb.setLayoutParams(params);
+        searchBox.setLayoutParams(params);
       }
     }
   }
@@ -199,18 +177,18 @@ public class MapActivity extends Activity {
   @Override
   public void onPause() {
     super.onPause();
-    mapHelper.disconnect();
+    mapVC.disconnectLocations();
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    mapHelper.connect();
+    mapVC.connectLocations();
     if (textView.isCursorVisible()) {
       hideKeyboard();
     }
     else {
-      mapHelper.redraw();
+      mapVC.invalidate();
     }
   }
 }

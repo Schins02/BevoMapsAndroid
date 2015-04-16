@@ -26,108 +26,136 @@ public class BuildingActivity extends Activity {
   // Fields---------------------------------------------------------
 
   private CacheLayer cacheLayer;
-  private String building, floor;
+  private String curBuilding, curFloor;
 
-  private ABHelper abHelper;
-  private BGHelper bgHelper;
-  private FSHelper fsHelper;
-  private ImageHelper imageHelper;
+  private ActionBarVC actionBarVC;
+  private BackgroundVC backgroundVC;
+  private FloorSelectorVC floorSelectorVC;
+  private ImageVC imageVC;
 
+  private static final long FADE_DURATION = 500; //500ms
   private ProgressBar progressBar;
+  private ImageTask.OnProgressUpdateListener progressListener;
 
   // Methods--------------------------------------------------------
 
   @Override
-  protected void onCreate(Bundle in) {
-    super.onCreate(in);
+  protected void onCreate(Bundle bundle) {
+    super.onCreate(bundle);
     setContentView(R.layout.activity_building);
 
     Intent intent = getIntent();
-    cacheLayer = intent.getParcelableExtra("cache");
-    building = intent.getStringExtra(SearchLayer.BUILDING);
-    floor = intent.getStringExtra(SearchLayer.FLOOR);
+    cacheLayer = intent.getParcelableExtra(CacheLayer.class.getSimpleName());
 
-    String text = "";
-    if (in != null) {
-      building = in.getString(SearchLayer.BUILDING);
-      floor = in.getString(SearchLayer.FLOOR);
-      text = in.getString("searchText");
+    if (bundle != null) {
+      curBuilding = bundle.getString(SearchLayer.BUILDING);
+      curFloor = bundle.getString(SearchLayer.FLOOR);
+    }
+    else {
+      curBuilding = intent.getStringExtra(SearchLayer.BUILDING);
+      curFloor = intent.getStringExtra(SearchLayer.FLOOR);
     }
 
-    abHelper = new ABHelper(this);
-    abHelper.setTitle(intent.getStringExtra("name"));
-    abHelper.getEditText().setText(text);
-    abHelper.setBackOnClickListener(new View.OnClickListener() {
+    CharSequence text = bundle != null ? bundle.getCharSequence("text") : null;
+    String title = intent.getStringExtra("title");
+    actionBarVC = new ActionBarVC(this);
+    actionBarVC.setTitle(title);
+    actionBarVC.getEditText().setText(text);
+    actionBarVC.setOnBackClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         hideKeyboard();
         finish();
       }
     });
-    abHelper.setSearchOnClickListener(new View.OnClickListener() {
+    actionBarVC.setOnSearchClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         showKeyboard();
       }
     });
-    abHelper.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+    actionBarVC.setOnEditorActionListener(new TextView.OnEditorActionListener() {
       @Override
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         hideKeyboard();
-        Map<String, String> infoMap =
-            SearchLayer.parseInputText(cacheLayer, abHelper.getEditText().getText().toString());
-        prepareForSegue(infoMap.get(SearchLayer.BUILDING), infoMap.get(SearchLayer.FLOOR));
+
+        String input = actionBarVC.getEditText().getText().toString();
+        Map<String, String> info = SearchLayer.parseInputText(cacheLayer, input);
+
+        prepareForSegue(info.get(SearchLayer.BUILDING), info.get(SearchLayer.FLOOR));
         return true;
       }
     });
-    bgHelper = new BGHelper(findViewById(R.id.building_background));
-    bgHelper.setOnTouchListener(new View.OnTouchListener() {
+
+    backgroundVC = new BackgroundVC(findViewById(R.id.building_background));
+    backgroundVC.setOnTouchListener(new View.OnTouchListener() {
       @Override
       public boolean onTouch(View v, MotionEvent event) {
-        if (abHelper.isSearchVisible()) {
+        if (actionBarVC.isSearchVisible()) {
           hideKeyboard();
+          return true;
         }
-
         return false;
       }
     });
-    fsHelper = new FSHelper(this);
-    fsHelper.setOnItemClickListener(new FSHelper.OnItemSelectedListener() {
+
+    floorSelectorVC = new FloorSelectorVC(this);
+    floorSelectorVC.setOnItemClickListener(new FloorSelectorVC.OnItemSelectedListener() {
       @Override
       public void onItemClicked(TextView view) {
-        prepareForSegue(building, view.getText().toString());
+        prepareForSegue(curBuilding, view.getText().toString());
       }
     });
-    imageHelper = new ImageHelper((SubsamplingScaleImageView)findViewById(R.id.building_image));
+
+    SubsamplingScaleImageView imageView =
+        (SubsamplingScaleImageView)findViewById(R.id.building_image);
+    imageVC = new ImageVC(imageView);
 
     progressBar = (ProgressBar)findViewById(R.id.ab_progress);
 
-    cacheLayer.loadFloors(fsHelper, building);
-    cacheLayer.loadImage(imageHelper, progressBar, building, floor);
+    progressListener = new ImageTask.OnProgressUpdateListener() {
+      @Override
+      public void onProgressBegin() {
+        progressBar.setProgress(0);
+        progressBar.setAlpha(1);
+      }
+      @Override
+      public void onProgressUpdate(double progress) {
+        progressBar.setProgress((int)(progress * progressBar.getMax()));
+        if (progress == 1) {
+          progressBar.animate().alpha(0).setDuration(FADE_DURATION);
+        }
+      }
+    };
+
+    cacheLayer.loadFloors(floorSelectorVC, curBuilding);
+    cacheLayer.loadImage(imageVC, curBuilding, curFloor, progressListener);
   }
 
   @Override
   protected void onSaveInstanceState(@NonNull Bundle out) {
-    out.putString(SearchLayer.BUILDING, building);
-    out.putString(SearchLayer.FLOOR, floor);
-    out.putString("searchText", abHelper.getEditText().getText().toString());
+    out.putString(SearchLayer.BUILDING, curBuilding);
+    out.putString(SearchLayer.FLOOR, curFloor);
+    out.putString("text", actionBarVC.getEditText().getText().toString());
   }
 
   private void prepareForSegue(String building, String floor) {
-    if (this.building.equals(building)) {
-      this.floor = floor;
-
-      cacheLayer.loadImage(imageHelper, progressBar, building, floor);
+    if (curBuilding.equals(building)) {
+      cacheLayer.loadImage(imageVC, building, floor, progressListener);
+      curFloor = floor;
+      return;
     }
-    else if (building != null && cacheLayer.isBuilding(building)) {
-      this.building = building;
-      this.floor = floor;
 
-      abHelper.setTitle(cacheLayer.getBuildingName(building));
-      fsHelper.clear();
+    String title = cacheLayer.getBuildingName(building);
+    if (building != null && title != null) {
+      curBuilding = building;
+      curFloor = floor;
 
-      cacheLayer.loadFloors(fsHelper, building);
-      cacheLayer.loadImage(imageHelper, progressBar, building, floor);
+      actionBarVC.setTitle(title);
+      floorSelectorVC.clearItems();
+
+      cacheLayer.loadFloors(floorSelectorVC, building);
+      cacheLayer.loadImage(imageVC, building, floor, progressListener);
     }
     else {
       Toast.makeText(this, R.string.toast_invalid, Toast.LENGTH_SHORT).show();
@@ -135,28 +163,28 @@ public class BuildingActivity extends Activity {
   }
 
   private void showKeyboard() {
-    abHelper.expand();
-    bgHelper.fadeIn();
-    fsHelper.fadeOut();
+    actionBarVC.expandBar();
+    backgroundVC.animateFadeIn();
+    floorSelectorVC.animateFadeOut();
 
-    abHelper.getEditText().requestFocus();
+    actionBarVC.getEditText().requestFocus();
     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.showSoftInput(abHelper.getEditText(), 0);
+    imm.showSoftInput(actionBarVC.getEditText(), 0);
   }
 
   private void hideKeyboard() {
-    abHelper.collapse();
-    bgHelper.fadeOut();
-    fsHelper.fadeIn();
+    actionBarVC.collapseBar();
+    backgroundVC.animateFadeOut();
+    floorSelectorVC.animateFadeIn();
 
     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.hideSoftInputFromWindow(abHelper.getEditText().getWindowToken(), 0);
+    imm.hideSoftInputFromWindow(actionBarVC.getEditText().getWindowToken(), 0);
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    if (abHelper.isSearchVisible()) {
+    if (actionBarVC.isSearchVisible()) {
       hideKeyboard();
     }
   }

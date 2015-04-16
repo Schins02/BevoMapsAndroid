@@ -3,39 +3,40 @@ package edu.utexas.cs.bevomaps;
 import android.view.View;
 
 /**
- * BGHelper.java
+ * BackgroundVC.java
  *
  * Created by Eric on 4/2/15.
  */
 
-class BGHelper {
+class BackgroundVC {
 
   // Fields---------------------------------------------------------
 
-  private final View view;
   private static final long FADE_DURATION = 200; //200ms
+
+  private final View background;
 
   // Constructors---------------------------------------------------
 
-  BGHelper(View view) {
-    this.view = view;
+  BackgroundVC(View view) {
+    background = view;
   }
 
   // Methods--------------------------------------------------------
 
-  void fadeIn() {
-    view.animate()
+  void animateFadeIn() {
+    background.animate()
         .alpha(1)
         .setDuration(FADE_DURATION);
   }
 
-  void fadeOut() {
-    view.animate()
+  void animateFadeOut() {
+    background.animate()
         .alpha(0)
         .setDuration(FADE_DURATION);
   }
 
   void setOnTouchListener(View.OnTouchListener listener) {
-    view.setOnTouchListener(listener);
+    background.setOnTouchListener(listener);
   }
 }
