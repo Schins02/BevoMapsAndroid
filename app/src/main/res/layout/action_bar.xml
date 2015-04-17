@@ -35,13 +35,16 @@
     android:layout_height="48dp"
     android:layout_alignParentBottom="true"
     android:layout_marginBottom="3dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginStart="16dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginEnd="8dp"
     android:layout_toLeftOf="@id/ab_search"
     android:layout_toStartOf="@id/ab_search"
     android:layout_toRightOf="@id/ab_back"
     android:layout_toEndOf="@id/ab_back"
     android:gravity="center_vertical"
+    android:singleLine="true"
     android:textColor="@color/material_white"
     android:textSize="20sp" />
 

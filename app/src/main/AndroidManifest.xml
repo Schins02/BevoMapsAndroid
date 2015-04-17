@@ -49,5 +49,4 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyAtuREMU9exHz3wjsrJLJB25MSYh8pkWco" />
     </application>
-
 </manifest>
