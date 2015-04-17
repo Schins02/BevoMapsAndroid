@@ -66,11 +66,16 @@ public class MapActivity extends Activity {
     });
 
     MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.map_fragment);
-    CameraPosition cameraPos = bundle != null ?
-        (CameraPosition)bundle.getParcelable("camera") : null;
     int[] circleColors = {getResources().getColor(R.color.burnt_orange_10),
-        getResources().getColor(R.color.burnt_orange_20)};
-    mapVC = new MapVC(this, mapFragment, cameraPos, cacheLayer, circleColors);
+                          getResources().getColor(R.color.burnt_orange_20)};
+    if (bundle != null) {
+      mapVC = new MapVC(this, mapFragment, (CameraPosition)bundle.getParcelable("camera"),
+          cacheLayer, circleColors);
+      mapVC.setCurFollow(bundle.getBoolean("follow"));
+    }
+    else {
+      mapVC = new MapVC(this, mapFragment, null, cacheLayer, circleColors);
+    }
 
     FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.map_location);
     fabVC = new FABVC(fab);
@@ -139,6 +144,7 @@ public class MapActivity extends Activity {
   @Override
   protected void onSaveInstanceState(@NonNull Bundle bundle) {
     bundle.putParcelable("camera", mapVC.getCameraPosition());
+    bundle.putBoolean("follow", mapVC.getCurFollow());
     bundle.putCharSequence("text", textView.getText());
   }
 

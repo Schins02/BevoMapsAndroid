@@ -32,8 +32,8 @@ class CacheLayer implements Parcelable {
   private final File cacheDir;
 
   private HashMap<String, HashMap<String, String>> buildingMap;
-  private HashMap<String, String> searchMap;
   private HashMap<String, HashMap<String, String>> markerMap;
+  private HashMap<String, String> searchMap;
 
   public static final Creator<CacheLayer> CREATOR = new Creator<CacheLayer>() {
     @Override

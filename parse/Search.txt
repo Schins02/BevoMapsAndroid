@@ -34,5 +34,3 @@ seventeen_17
 17th_17
 gates_GDC
 dell_GDC
-gates dell_GDC
-dell gates_GDC

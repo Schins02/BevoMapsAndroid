@@ -129,12 +129,16 @@ class MapVC implements GoogleApiClient.ConnectionCallbacks, LocationListener {
     return googleMap != null ? googleMap.getCameraPosition() : null;
   }
 
+  boolean getCurFollow() {
+    return curFollow;
+  }
+
   void invalidate() {
     mapView.invalidate();
   }
 
-  void setCurFollow(boolean curFollow) {
-    this.curFollow = curFollow;
+  void setCurFollow(boolean follow) {
+    curFollow = follow;
     if (curFollow) {
       setLocation();
     }

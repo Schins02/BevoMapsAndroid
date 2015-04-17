@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import com.parse.Parse;
 import com.parse.ParseACL;
@@ -37,14 +35,13 @@ public class SplashActivity extends Activity {
       @Override
       public void run() {
         if (cacheLayer.isReady()) {
-          handler.removeCallbacks(this);
-
           Intent intent = new Intent(context, MapActivity.class);
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
               .putExtra(CacheLayer.class.getSimpleName(), cacheLayer);
-
           startActivity(intent);
+
           finish();
+          overridePendingTransition(0, 0);
           return;
         }
 
@@ -69,11 +66,6 @@ public class SplashActivity extends Activity {
       if (id > 0) {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
             WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-        View searchBox = findViewById(R.id.sb);
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) searchBox.getLayoutParams();
-        params.topMargin = getResources().getDimensionPixelSize(id);
-        searchBox.setLayoutParams(params);
       }
     }
   }

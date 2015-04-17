@@ -12,7 +12,7 @@ search_dict = {}
 
 for root, dirs, files, in os.walk(os.getcwd()) :
 	for name in files : 
-		if(name.startswith("search")):
+		if(name.startswith("Search")):
 	
 			file = open(name)
 			for line in iter(file) :	
