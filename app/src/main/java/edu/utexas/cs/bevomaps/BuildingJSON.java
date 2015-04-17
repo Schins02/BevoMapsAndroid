@@ -21,4 +21,6 @@ public class BuildingJSON extends ParseObject {
     public List<HashMap<String, String>> getMarkerList() {
         return getList("Markers");
     }
+
+    public JSONObject getSearchMap() {return getJSONObject("SearchMap"); }
 }

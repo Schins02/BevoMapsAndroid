@@ -113,6 +113,29 @@ class DataLayer {
     }
 
     static HashMap<String, String> getSearchMap() {
-        return new HashMap<>();
+
+        HashMap<String,String> searchMap = new HashMap<>();
+        ParseQuery<BuildingJSON> query = ParseQuery.getQuery("BuildingJSON");
+        query = query.whereEqualTo("pk", "jsonObj");
+
+        try {
+            BuildingJSON parseBuildingJSON = query.getFirst();
+            if (parseBuildingJSON != null){
+                try{
+                    JSONObject json = parseBuildingJSON.getSearchMap();
+                    Iterator<String> iter = json.keys();
+                    while(iter.hasNext()){
+                        String key = iter.next();
+                        searchMap.put(key, json.getString(key));
+                    }
+                }  catch (JSONException jsonException) {
+                    Log.e(TAG, jsonException.toString());
+                }
+            }
+        } catch (ParseException e) {
+            Log.e(TAG, e.toString());
+        }
+
+        return searchMap;
     }
 }
