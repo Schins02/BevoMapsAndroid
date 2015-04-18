@@ -40,6 +40,7 @@ public class MapActivity extends Activity {
   private FABVC fabVC;
   private MapVC mapVC;
 
+  private DrawerLayout drawerLayout;
   private EditText textView;
 
   // Methods--------------------------------------------------------
@@ -70,11 +71,11 @@ public class MapActivity extends Activity {
                           getResources().getColor(R.color.burnt_orange_20)};
     if (bundle != null) {
       mapVC = new MapVC(this, mapFragment, (CameraPosition)bundle.getParcelable("camera"),
-          cacheLayer, circleColors);
+          bundle.getBoolean("hybrid"), cacheLayer, circleColors);
       mapVC.setCurFollow(bundle.getBoolean("follow"));
     }
     else {
-      mapVC = new MapVC(this, mapFragment, null, cacheLayer, circleColors);
+      mapVC = new MapVC(this, mapFragment, null, false, cacheLayer, circleColors);
     }
 
     FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.map_location);
@@ -111,6 +112,8 @@ public class MapActivity extends Activity {
       }
     });
 
+    drawerLayout = (DrawerLayout)findViewById(R.id.map_drawer);
+
     ImageButton menuButton = (ImageButton)findViewById(R.id.sb_menu);
     menuButton.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -118,8 +121,16 @@ public class MapActivity extends Activity {
         if (textView.isCursorVisible()) {
           hideKeyboard();
         }
-        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.map_drawer);
-        drawer.openDrawer(GravityCompat.START);
+        drawerLayout.openDrawer(GravityCompat.START);
+      }
+    });
+
+    View satelliteItem = findViewById(R.id.drawer_satellite);
+    satelliteItem.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        mapVC.setCurSatellite(!mapVC.getCurSatellite());
+        drawerLayout.closeDrawer(GravityCompat.START);
       }
     });
   }
@@ -145,6 +156,7 @@ public class MapActivity extends Activity {
   protected void onSaveInstanceState(@NonNull Bundle bundle) {
     bundle.putParcelable("camera", mapVC.getCameraPosition());
     bundle.putBoolean("follow", mapVC.getCurFollow());
+    bundle.putBoolean("hybrid", mapVC.getCurSatellite());
     bundle.putCharSequence("text", textView.getText());
   }
 
@@ -171,11 +183,17 @@ public class MapActivity extends Activity {
       if (id > 0) {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
             WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        int height = getResources().getDimensionPixelSize(id);
 
-        View searchBox = findViewById(R.id.sb);
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) searchBox.getLayoutParams();
-        params.topMargin = getResources().getDimensionPixelSize(id);
-        searchBox.setLayoutParams(params);
+        View topView = findViewById(R.id.sb);
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)topView.getLayoutParams();
+        params.topMargin = height;
+        topView.setLayoutParams(params);
+
+        topView = findViewById(R.id.drawer_options);
+        params = (ViewGroup.MarginLayoutParams)topView.getLayoutParams();
+        params.topMargin = height;
+        topView.setLayoutParams(params);
       }
     }
   }

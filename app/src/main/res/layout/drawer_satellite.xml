@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/drawer_satellite"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginBottom="8dp"
+  android:background="@color/material_white"
+  android:orientation="horizontal" >
+
+  <ImageButton
+    android:id="@+id/satellite_icon"
+    android:layout_width="32dp"
+    android:layout_height="32dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginStart="16dp"
+    android:background="@color/material_white"
+    android:contentDescription="@string/item_satellite"
+    android:src="@drawable/ic_satellite" />
+
+  <TextView
+    android:id="@+id/satellite_text"
+    android:layout_width="match_parent"
+    android:layout_height="36dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginStart="16dp"
+    android:fontFamily="sans-serif-medium"
+    android:gravity="center_vertical"
+    android:text="@string/item_satellite"
+    android:textColor="@color/secondary_black"
+    android:textSize="16sp" />
+</LinearLayout>

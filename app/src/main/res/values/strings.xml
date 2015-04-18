@@ -4,6 +4,9 @@
   <string name="button_menu">Menu</string>
   <string name="button_search">Search</string>
   <string name="button_speech">Speech</string>
+  <string name="header_options">Options</string>
+  <string name="item_about">About</string>
+  <string name="item_satellite">Satellite</string>
   <string name="search_hint">Search</string>
   <string name="toast_invalid">GDC ONLY</string>
   <string name="options">Options</string>

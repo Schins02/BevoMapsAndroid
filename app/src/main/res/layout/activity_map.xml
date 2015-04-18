@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/map_drawer"
@@ -39,62 +40,5 @@
         <include layout="@layout/search_bar" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="280dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/material_white">
-
-        <TextView
-            android:id="@+id/options"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:paddingLeft="30dp"
-            android:text="@string/options"
-            android:textSize="25dp" />
-
-        <ImageButton
-            android:id="@+id/satellite_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/options"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="30dp"
-            android:background="@color/material_white"
-            android:src="@drawable/satellite" />
-
-        <TextView
-            android:id="@+id/satellite_text"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_below="@id/options"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_toRightOf="@id/satellite_icon"
-            android:text="@string/satellite"
-            android:textColor="#000000"
-            android:textSize="25dp" />
-
-        <ImageButton
-            android:id="@+id/info_icon"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_below="@id/satellite_icon"
-            android:layout_marginTop="12dp"
-            android:background="@color/material_white"
-            android:paddingLeft="8dp"
-            android:src="@drawable/about" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_below="@id/satellite_text"
-            android:layout_marginTop="4dp"
-            android:layout_toRightOf="@id/info_icon"
-            android:paddingLeft="30dp"
-            android:text="About"
-            android:textColor="@color/black"
-            android:textSize="25dp" />
-    </RelativeLayout>
+    <include layout="@layout/drawer" />
 </android.support.v4.widget.DrawerLayout>

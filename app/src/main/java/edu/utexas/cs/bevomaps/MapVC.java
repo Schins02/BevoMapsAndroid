@@ -47,7 +47,7 @@ class MapVC implements GoogleApiClient.ConnectionCallbacks, LocationListener {
   // Constructors---------------------------------------------------
 
   MapVC(Context context, MapFragment mapFragment, final CameraPosition cameraPos,
-        final CacheLayer cacheLayer, final int[] circleColors) {
+        final boolean satellite, final CacheLayer cacheLayer, final int[] circleColors) {
     locRequest = new LocationRequest();
     locRequest.setInterval(UPDATE_FREQ);
     locRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -81,6 +81,7 @@ class MapVC implements GoogleApiClient.ConnectionCallbacks, LocationListener {
             CameraUpdateFactory.newCameraPosition(cameraPos) :
             CameraUpdateFactory.newLatLngZoom(utTower, DEFAULT_ZOOM));
 
+        setCurSatellite(satellite);
         cacheLayer.loadMarkers(map);
       }
     });
@@ -133,6 +134,10 @@ class MapVC implements GoogleApiClient.ConnectionCallbacks, LocationListener {
     return curFollow;
   }
 
+  boolean getCurSatellite() {
+    return googleMap != null && googleMap.getMapType() == GoogleMap.MAP_TYPE_HYBRID;
+  }
+
   void invalidate() {
     mapView.invalidate();
   }
@@ -141,6 +146,12 @@ class MapVC implements GoogleApiClient.ConnectionCallbacks, LocationListener {
     curFollow = follow;
     if (curFollow) {
       setLocation();
+    }
+  }
+
+  void setCurSatellite(boolean satellite) {
+    if (googleMap != null) {
+      googleMap.setMapType(satellite ? GoogleMap.MAP_TYPE_HYBRID : GoogleMap.MAP_TYPE_NORMAL);
     }
   }
 
