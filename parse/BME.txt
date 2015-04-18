@@ -1,0 +1,19 @@
+1_http://i.imgur.com/GfdeeGL.png
+2_http://i.imgur.com/X4WX8Yc.png
+3_http://i.imgur.com/HaJjw2Q.png
+4_http://i.imgur.com/y451CyI.png
+5_http://i.imgur.com/bca3uQO.png
+6_http://i.imgur.com/fAPTtfO.png
+1p_http://i.imgur.com/fLAks6Q.png
+2p_http://i.imgur.com/UljBlmK.png
+3p_http://i.imgur.com/gYvRpVJ.png
+4p_http://i.imgur.com/RRIN1vb.png
+5p_http://i.imgur.com/foSGq9S.png
+6p_http://i.imgur.com/nj0auPA.png
+floorNames_6 5 4 3 2 1
+defaultFloor_2
+shortName_BME
+longName_Biomedical Engineering Building
+latitude_30.289123
+longitude_-97.738758
+thumbnail_http://www.utexas.edu/maps/main/buildings/graphics/buildings/bme.jpg
