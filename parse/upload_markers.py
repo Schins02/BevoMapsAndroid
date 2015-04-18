@@ -18,7 +18,7 @@ marker_list_fields = ["shortName", "longName", "latitude", "longitude", "thumbna
 
 for root, dirs, files, in os.walk(os.getcwd()) :
 	for name in files : 
-		if(name.endswith(".txt")):
+		if(not name.startswith("Search") and name.endswith(".txt")):
 
 
 			marker_dictionary = {}
