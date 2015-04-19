@@ -1,0 +1,19 @@
+0_
+1_
+2_
+3_
+4_
+5_
+0p_
+1p_
+2p_
+3p_
+4p_
+5p_
+floorNames_5 4 3 2 1 0
+defaultFloor_1
+shortName_CLA
+longName_Liberal Arts Building
+latitude_30.284931
+longitude_-97.735444
+thumbnail_https://www.utexas.edu/maps/main/buildings/graphics/buildings/cla.jpg
