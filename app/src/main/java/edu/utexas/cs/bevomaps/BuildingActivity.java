@@ -129,7 +129,7 @@ public class BuildingActivity extends Activity {
     };
 
     cacheLayer.loadFloors(floorSelectorVC, curBuilding);
-    cacheLayer.loadImage(imageVC, curBuilding, curFloor, progressListener);
+    curFloor = cacheLayer.loadImage(imageVC, curBuilding, curFloor, progressListener);
   }
 
   @Override
@@ -141,21 +141,18 @@ public class BuildingActivity extends Activity {
 
   private void prepareForSegue(String building, String floor) {
     if (curBuilding.equals(building)) {
-      cacheLayer.loadImage(imageVC, building, floor, progressListener);
-      curFloor = floor;
+      curFloor = cacheLayer.loadImage(imageVC, building, floor, progressListener);
       return;
     }
 
     String title = cacheLayer.getBuildingName(building);
     if (building != null && title != null) {
-      curBuilding = building;
-      curFloor = floor;
-
       actionBarVC.setTitle(title);
       floorSelectorVC.clearItems();
+      floorSelectorVC.addItems(cacheLayer.getFloorNames(building));
 
-      cacheLayer.loadFloors(floorSelectorVC, building);
-      cacheLayer.loadImage(imageVC, building, floor, progressListener);
+      curBuilding = building;
+      curFloor = cacheLayer.loadImage(imageVC, building, floor, progressListener);
     }
     else {
       Toast.makeText(this, R.string.toast_invalid, Toast.LENGTH_SHORT).show();

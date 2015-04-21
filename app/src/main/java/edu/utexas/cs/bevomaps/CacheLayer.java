@@ -65,7 +65,7 @@ class CacheLayer implements Parcelable {
     floorSelectorVC.addItems(buildingMap.get(building).get(DataLayer.FLOOR_NAMES).split("\\s+"));
   }
 
-  void loadImage(ImageVC imageVC, String building, String floor,
+  String loadImage(ImageVC imageVC, String building, String floor,
                  ImageTask.OnProgressUpdateListener listener) {
     Map <String, String> info = buildingMap.get(building);
     if (!info.containsKey(floor)) {
@@ -83,6 +83,8 @@ class CacheLayer implements Parcelable {
     else {
       new ImageTask(imageVC, info, floor, cacheDir, listener).execute();
     }
+
+    return floor;
   }
 
   void loadMarkers(GoogleMap map) {
@@ -110,6 +112,11 @@ class CacheLayer implements Parcelable {
   String getBuildingName(String building) {
     Map<String, String> info = markerMap.get(building);
     return info != null ? info.get(DataLayer.LONG_NAME) : null;
+  }
+
+  String[] getFloorNames(String building) {
+    Map<String, String> info = markerMap.get(building);
+    return info != null ? info.get(DataLayer.FLOOR_NAMES).split("\\s+") : null;
   }
 
   boolean isReady() {
