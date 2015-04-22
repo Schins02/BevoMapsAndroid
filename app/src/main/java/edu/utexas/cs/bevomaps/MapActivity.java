@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.alertdialogpro.AlertDialogPro;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -26,7 +28,7 @@ import java.util.Map;
 
 /**
  * MapActivity.java
- *
+ * <p/>
  * Created by Eric on 3/28/15.
  */
 
@@ -43,12 +45,15 @@ public class MapActivity extends Activity {
   private DrawerLayout drawerLayout;
   private EditText textView;
 
+  private Context context;
+
   // Methods--------------------------------------------------------
 
   @Override
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
     setContentView(R.layout.activity_map);
+    context = this;
 
     cacheLayer = getIntent().getParcelableExtra(CacheLayer.class.getSimpleName());
     configureStatusBar();
@@ -66,19 +71,18 @@ public class MapActivity extends Activity {
       }
     });
 
-    MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.map_fragment);
+    MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
     int[] circleColors = {getResources().getColor(R.color.burnt_orange_10),
-                          getResources().getColor(R.color.burnt_orange_20)};
+            getResources().getColor(R.color.burnt_orange_20)};
     if (bundle != null) {
-      mapVC = new MapVC(this, mapFragment, (CameraPosition)bundle.getParcelable("camera"),
-          bundle.getBoolean("hybrid"), cacheLayer, circleColors);
+      mapVC = new MapVC(this, mapFragment, (CameraPosition) bundle.getParcelable("camera"),
+              bundle.getBoolean("hybrid"), cacheLayer, circleColors);
       mapVC.setCurFollow(bundle.getBoolean("follow"));
-    }
-    else {
+    } else {
       mapVC = new MapVC(this, mapFragment, null, false, cacheLayer, circleColors);
     }
 
-    FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.map_location);
+    FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.map_location);
     fabVC = new FABVC(fab);
     fabVC.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -87,7 +91,7 @@ public class MapActivity extends Activity {
       }
     });
 
-    textView = (EditText)findViewById(R.id.sb_text);
+    textView = (EditText) findViewById(R.id.sb_text);
     if (bundle != null) {
       textView.setText(bundle.getCharSequence("text"));
     }
@@ -112,9 +116,9 @@ public class MapActivity extends Activity {
       }
     });
 
-    drawerLayout = (DrawerLayout)findViewById(R.id.map_drawer);
+    drawerLayout = (DrawerLayout) findViewById(R.id.map_drawer);
 
-    ImageButton menuButton = (ImageButton)findViewById(R.id.sb_menu);
+    ImageButton menuButton = (ImageButton) findViewById(R.id.sb_menu);
     menuButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -133,6 +137,17 @@ public class MapActivity extends Activity {
         drawerLayout.closeDrawer(GravityCompat.START);
       }
     });
+
+    View aboutItem = findViewById(R.id.drawer_about);
+    aboutItem.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        AlertDialogPro.Builder builder = new AlertDialogPro.Builder(context);
+        builder.setTitle("About").
+                setMessage("Bevo Maps is powered by the Google Maps API").
+                show();
+      }
+    });
   }
 
   private void prepareForSegue(String building, String floor) {
@@ -141,13 +156,12 @@ public class MapActivity extends Activity {
     if (building != null && title != null) {
       Intent intent = new Intent(this, BuildingActivity.class);
       intent.putExtra(CacheLayer.class.getSimpleName(), cacheLayer)
-          .putExtra("title", title)
-          .putExtra(SearchLayer.BUILDING, building)
-          .putExtra(SearchLayer.FLOOR, floor);
+              .putExtra("title", title)
+              .putExtra(SearchLayer.BUILDING, building)
+              .putExtra(SearchLayer.FLOOR, floor);
 
       startActivity(intent);
-    }
-    else {
+    } else {
       Toast.makeText(this, R.string.toast_invalid, Toast.LENGTH_SHORT).show();
     }
   }
@@ -182,16 +196,16 @@ public class MapActivity extends Activity {
       int id = getResources().getIdentifier("status_bar_height", "dimen", "android");
       if (id > 0) {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-            WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         int height = getResources().getDimensionPixelSize(id);
 
         View topView = findViewById(R.id.sb);
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)topView.getLayoutParams();
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) topView.getLayoutParams();
         params.topMargin = height;
         topView.setLayoutParams(params);
 
         topView = findViewById(R.id.drawer_options);
-        params = (ViewGroup.MarginLayoutParams)topView.getLayoutParams();
+        params = (ViewGroup.MarginLayoutParams) topView.getLayoutParams();
         params.topMargin = height;
         topView.setLayoutParams(params);
       }
@@ -210,8 +224,7 @@ public class MapActivity extends Activity {
     mapVC.connectLocations();
     if (textView.isCursorVisible()) {
       hideKeyboard();
-    }
-    else {
+    } else {
       mapVC.invalidate();
     }
   }
