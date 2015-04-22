@@ -29,17 +29,12 @@
 
         <activity
             android:name=".MapActivity"
-            android:launchMode="singleTop"
             android:screenOrientation="portrait" >
         </activity>
 
         <activity
             android:name=".BuildingActivity"
-            android:parentActivityName=".MapActivity"
             android:screenOrientation="portrait" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="MapActivity" />
         </activity>
 
         <meta-data

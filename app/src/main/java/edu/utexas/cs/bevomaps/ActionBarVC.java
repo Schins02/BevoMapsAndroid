@@ -38,6 +38,22 @@ class ActionBarVC {
 
   // Methods--------------------------------------------------------
 
+  void expandBar() {
+    backButton.setEnabled(false);
+    searchButton.setEnabled(false);
+    searchBar.animate()
+        .alpha(1)
+        .scaleX(1)
+        .setDuration(BAR_DURATION)
+        .translationX(0)
+        .withStartAction(new Runnable() {
+          @Override
+          public void run() {
+            searchBar.setVisibility(View.VISIBLE);
+          }
+        });
+  }
+
   void collapseBar() {
     backButton.setEnabled(true);
     searchButton.setEnabled(true);
@@ -49,23 +65,7 @@ class ActionBarVC {
        .withEndAction(new Runnable() {
          @Override
          public void run() {
-           searchBar.setVisibility(View.INVISIBLE);
-         }
-       });
-  }
-
-  void expandBar() {
-    backButton.setEnabled(false);
-    searchButton.setEnabled(false);
-    searchBar.animate()
-       .alpha(1)
-       .scaleX(1)
-       .setDuration(BAR_DURATION)
-       .translationX(0)
-       .withStartAction(new Runnable() {
-         @Override
-         public void run() {
-           searchBar.setVisibility(View.VISIBLE);
+           searchBar.setVisibility(View.GONE);
          }
        });
   }

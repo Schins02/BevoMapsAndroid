@@ -213,6 +213,11 @@ public class MapActivity extends Activity {
   }
 
   @Override
+  public void onBackPressed() {
+    moveTaskToBack(true);
+  }
+
+  @Override
   public void onPause() {
     super.onPause();
     mapVC.disconnectLocations();

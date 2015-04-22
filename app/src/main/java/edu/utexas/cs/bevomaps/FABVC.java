@@ -30,15 +30,26 @@ class FABVC {
     button.animate()
           .alpha(1)
           .translationYBy(-SLIDE_DISTANCE)
-          .setDuration(SLIDE_DURATION);
-
+          .setDuration(SLIDE_DURATION)
+          .withStartAction(new Runnable() {
+      @Override
+      public void run() {
+        button.setVisibility(View.VISIBLE);
+      }
+    });
   }
 
   void animateSlideOut() {
     button.animate()
           .alpha(0)
           .translationYBy(SLIDE_DISTANCE)
-          .setDuration(SLIDE_DURATION);
+          .setDuration(SLIDE_DURATION)
+          .withEndAction(new Runnable() {
+      @Override
+      public void run() {
+        button.setVisibility(View.GONE);
+      }
+    });
   }
 
   void animateMoveUp() {
