@@ -38,6 +38,33 @@ class FloorSelectorVC {
 
   // Methods--------------------------------------------------------
 
+  void animateFadeIn() {
+    scrollView.animate()
+        .alpha(1)
+        .translationYBy(-FADE_DISTANCE)
+        .setDuration(FADE_DURATION)
+        .withStartAction(new Runnable() {
+          @Override
+          public void run() {
+            scrollView.setVisibility(View.VISIBLE);
+          }
+        });
+
+  }
+
+  void animateFadeOut() {
+    scrollView.animate()
+        .alpha(0)
+        .translationYBy(FADE_DISTANCE)
+        .setDuration(FADE_DURATION)
+        .withEndAction(new Runnable() {
+          @Override
+          public void run() {
+            scrollView.setVisibility(View.GONE);
+          }
+        });
+  }
+
   void addItems(String[] items) {
     itemAdapter.addAll(items);
 
@@ -53,21 +80,6 @@ class FloorSelectorVC {
       });
       listLayout.addView(view, pixelSize, pixelSize);
     }
-  }
-
-  void animateFadeIn() {
-    scrollView.animate()
-        .alpha(1)
-        .translationYBy(-FADE_DISTANCE)
-        .setDuration(FADE_DURATION);
-
-  }
-
-  void animateFadeOut() {
-    scrollView.animate()
-        .alpha(0)
-        .translationYBy(FADE_DISTANCE)
-        .setDuration(FADE_DURATION);
   }
 
   void clearItems() {
