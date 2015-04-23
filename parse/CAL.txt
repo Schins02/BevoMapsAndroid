@@ -1,0 +1,19 @@
+B_http://i.imgur.com/P5pjiIp.png
+1_http://i.imgur.com/9PHumUc.png
+2_http://i.imgur.com/7cqzsgi.png
+3_http://i.imgur.com/Fg4Rptd.png
+4_http://i.imgur.com/XvK8obb.png
+5_http://i.imgur.com/I7l05gh.png
+Bp_http://i.imgur.com/23giTh4.png
+1p_http://i.imgur.com/QWQMnNC.png
+2p_http://i.imgur.com/2z4cpgD.png
+3p_http://i.imgur.com/D7Rz3qV.png
+4p_http://i.imgur.com/octScnJ.png
+5p_http://i.imgur.com/Gd55u7T.png
+floorNames_5 4 3 2 1 B
+defaultFloor_1
+shortName_CAL
+longName_Calhoun Hall
+latitude_30.284500
+longitude_-97.740201
+thumbnail_http://dase.laits.utexas.edu/media/utbuildings/viewitem/100473855_400.jpg
