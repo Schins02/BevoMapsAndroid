@@ -1,0 +1,17 @@
+1_http://i.imgur.com/GySWuyK.png
+2_http://i.imgur.com/r3Qu01Z.png
+3_http://i.imgur.com/iBxd1ay.png
+4_http://i.imgur.com/QtluZuy.png
+5_http://i.imgur.com/gcUKySo.png
+1p_http://i.imgur.com/ye0h9qH.png
+2p_http://i.imgur.com/i3wOBmZ.png
+3p_http://i.imgur.com/t2ggeXG.png
+4p_http://i.imgur.com/MqIQQDE.png
+5p_http://i.imgur.com/TzhpzbZ.png
+floorNames_5 4 3 2 1
+defaultFloor_2
+shortName_BAT
+longName_Batts Hall
+latitude_30.284823
+longitude_-97.738838
+thumbnail_http://dase.laits.utexas.edu/media/utbuildings/viewitem/100473857_400.jpg
