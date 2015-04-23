@@ -9,7 +9,7 @@
 4p_http://i.imgur.com/1PoeVJb.png
 5p_http://i.imgur.com/BPohQZL.png
 floorNames_5 4 3 2 1
-defaultFloor_2
+defaultFloor_1
 shortName_BEN
 longName_Benedict Hall
 latitude_30.283956
