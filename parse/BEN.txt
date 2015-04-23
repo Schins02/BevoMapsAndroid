@@ -1,0 +1,17 @@
+1_http://i.imgur.com/9uX4ozN.png
+2_http://i.imgur.com/uNy2ITr.png
+3_http://i.imgur.com/GqOFRwF.png
+4_http://i.imgur.com/CjfFe48.png
+5_http://i.imgur.com/AUYPoYC.png
+1p_http://i.imgur.com/7LHYJ98.png
+2p_http://i.imgur.com/DlkMwJ8.png
+3p_http://i.imgur.com/Ayf9Qis.png
+4p_http://i.imgur.com/1PoeVJb.png
+5p_http://i.imgur.com/BPohQZL.png
+floorNames_5 4 3 2 1
+defaultFloor_2
+shortName_BEN
+longName_Benedict Hall
+latitude_30.283956
+longitude_-97.738908
+thumbnail_http://dase.laits.utexas.edu/media/utbuildings/viewitem/100473484_400.jpg
