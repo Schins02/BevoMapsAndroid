@@ -22,7 +22,7 @@ marker_list_fields = ["shortName", "longName", "latitude", "longitude", "thumbna
 
 for root, dirs, files, in os.walk(os.getcwd()) :
 	for name in files : 
-		if(name.endswith(".txt")):
+		if name.endswith(".txt") and not name.startswith("Search"):
 
 			number_of_floors = 0
 			building_name = name[0:-4]
